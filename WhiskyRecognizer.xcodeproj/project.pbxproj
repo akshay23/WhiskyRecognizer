@@ -8,20 +8,34 @@
 
 /* Begin PBXBuildFile section */
 		190EFF60208E0EE400749D2B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 190EFF5F208E0EE400749D2B /* AppDelegate.swift */; };
-		190EFF62208E0EE400749D2B /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 190EFF61208E0EE400749D2B /* ViewController.swift */; };
-		190EFF65208E0EE400749D2B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 190EFF63208E0EE400749D2B /* Main.storyboard */; };
 		190EFF67208E0EE500749D2B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 190EFF66208E0EE500749D2B /* Assets.xcassets */; };
 		190EFF6A208E0EE500749D2B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 190EFF68208E0EE500749D2B /* LaunchScreen.storyboard */; };
+		190EFF76208E0F7400749D2B /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 190EFF73208E0F7400749D2B /* Coordinator.swift */; };
+		190EFF77208E0F7400749D2B /* BaseController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 190EFF74208E0F7400749D2B /* BaseController.swift */; };
+		190EFF78208E0F7400749D2B /* CoordinatorDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 190EFF75208E0F7400749D2B /* CoordinatorDelegate.swift */; };
+		190EFF7A208E0FD900749D2B /* BindableType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 190EFF79208E0FD900749D2B /* BindableType.swift */; };
+		19BB3635208E19B400222757 /* HomeScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BB3634208E19B400222757 /* HomeScene.swift */; };
+		19BB3637208E19BD00222757 /* HomeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BB3636208E19BD00222757 /* HomeVC.swift */; };
+		19BB3639208E19C500222757 /* HomeVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BB3638208E19C500222757 /* HomeVM.swift */; };
+		2B648B1DC6D21D302AA95DC5 /* Pods_WhiskyRecognizer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7838C11A3E9CB2BD3A6D998C /* Pods_WhiskyRecognizer.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		190EFF5C208E0EE400749D2B /* WhiskyRecognizer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WhiskyRecognizer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		190EFF5F208E0EE400749D2B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		190EFF61208E0EE400749D2B /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		190EFF64208E0EE400749D2B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		190EFF66208E0EE500749D2B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		190EFF69208E0EE500749D2B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		190EFF6B208E0EE500749D2B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		190EFF73208E0F7400749D2B /* Coordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
+		190EFF74208E0F7400749D2B /* BaseController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseController.swift; sourceTree = "<group>"; };
+		190EFF75208E0F7400749D2B /* CoordinatorDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoordinatorDelegate.swift; sourceTree = "<group>"; };
+		190EFF79208E0FD900749D2B /* BindableType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BindableType.swift; sourceTree = "<group>"; };
+		19BB3634208E19B400222757 /* HomeScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeScene.swift; sourceTree = "<group>"; };
+		19BB3636208E19BD00222757 /* HomeVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeVC.swift; sourceTree = "<group>"; };
+		19BB3638208E19C500222757 /* HomeVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeVM.swift; sourceTree = "<group>"; };
+		7838C11A3E9CB2BD3A6D998C /* Pods_WhiskyRecognizer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_WhiskyRecognizer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D6B08DC4F128189B31A5708D /* Pods-WhiskyRecognizer.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WhiskyRecognizer.debug.xcconfig"; path = "Pods/Target Support Files/Pods-WhiskyRecognizer/Pods-WhiskyRecognizer.debug.xcconfig"; sourceTree = "<group>"; };
+		F550EA5135E829894AF64A49 /* Pods-WhiskyRecognizer.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WhiskyRecognizer.release.xcconfig"; path = "Pods/Target Support Files/Pods-WhiskyRecognizer/Pods-WhiskyRecognizer.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -29,6 +43,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2B648B1DC6D21D302AA95DC5 /* Pods_WhiskyRecognizer.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -40,6 +55,8 @@
 			children = (
 				190EFF5E208E0EE400749D2B /* WhiskyRecognizer */,
 				190EFF5D208E0EE400749D2B /* Products */,
+				3EA311CB57A3A6997141B43C /* Pods */,
+				48F19506A3E6ACAA65F65928 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -54,14 +71,60 @@
 		190EFF5E208E0EE400749D2B /* WhiskyRecognizer */ = {
 			isa = PBXGroup;
 			children = (
-				190EFF5F208E0EE400749D2B /* AppDelegate.swift */,
-				190EFF61208E0EE400749D2B /* ViewController.swift */,
-				190EFF63208E0EE400749D2B /* Main.storyboard */,
-				190EFF66208E0EE500749D2B /* Assets.xcassets */,
-				190EFF68208E0EE500749D2B /* LaunchScreen.storyboard */,
+				190EFF72208E0F4800749D2B /* Coordinator */,
+				19BB3633208E19A500222757 /* Home */,
+				190EFF71208E0F2A00749D2B /* Startup */,
 				190EFF6B208E0EE500749D2B /* Info.plist */,
 			);
 			path = WhiskyRecognizer;
+			sourceTree = "<group>";
+		};
+		190EFF71208E0F2A00749D2B /* Startup */ = {
+			isa = PBXGroup;
+			children = (
+				190EFF5F208E0EE400749D2B /* AppDelegate.swift */,
+				190EFF66208E0EE500749D2B /* Assets.xcassets */,
+				190EFF68208E0EE500749D2B /* LaunchScreen.storyboard */,
+			);
+			path = Startup;
+			sourceTree = "<group>";
+		};
+		190EFF72208E0F4800749D2B /* Coordinator */ = {
+			isa = PBXGroup;
+			children = (
+				190EFF79208E0FD900749D2B /* BindableType.swift */,
+				190EFF74208E0F7400749D2B /* BaseController.swift */,
+				190EFF73208E0F7400749D2B /* Coordinator.swift */,
+				190EFF75208E0F7400749D2B /* CoordinatorDelegate.swift */,
+			);
+			path = Coordinator;
+			sourceTree = "<group>";
+		};
+		19BB3633208E19A500222757 /* Home */ = {
+			isa = PBXGroup;
+			children = (
+				19BB3634208E19B400222757 /* HomeScene.swift */,
+				19BB3636208E19BD00222757 /* HomeVC.swift */,
+				19BB3638208E19C500222757 /* HomeVM.swift */,
+			);
+			path = Home;
+			sourceTree = "<group>";
+		};
+		3EA311CB57A3A6997141B43C /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				D6B08DC4F128189B31A5708D /* Pods-WhiskyRecognizer.debug.xcconfig */,
+				F550EA5135E829894AF64A49 /* Pods-WhiskyRecognizer.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		48F19506A3E6ACAA65F65928 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				7838C11A3E9CB2BD3A6D998C /* Pods_WhiskyRecognizer.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -71,9 +134,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 190EFF6E208E0EE500749D2B /* Build configuration list for PBXNativeTarget "WhiskyRecognizer" */;
 			buildPhases = (
+				E9DE5900C7FB7B499B548F90 /* [CP] Check Pods Manifest.lock */,
 				190EFF58208E0EE400749D2B /* Sources */,
 				190EFF59208E0EE400749D2B /* Frameworks */,
 				190EFF5A208E0EE400749D2B /* Resources */,
+				0314CA51591EB35385E51080 /* [CP] Embed Pods Frameworks */,
+				E4B0427B78DF559B81B68247 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -124,33 +190,100 @@
 			files = (
 				190EFF6A208E0EE500749D2B /* LaunchScreen.storyboard in Resources */,
 				190EFF67208E0EE500749D2B /* Assets.xcassets in Resources */,
-				190EFF65208E0EE400749D2B /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		0314CA51591EB35385E51080 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-WhiskyRecognizer/Pods-WhiskyRecognizer-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/Action/Action.framework",
+				"${BUILT_PRODUCTS_DIR}/Kingfisher/Kingfisher.framework",
+				"${BUILT_PRODUCTS_DIR}/Realm/Realm.framework",
+				"${BUILT_PRODUCTS_DIR}/RealmSwift/RealmSwift.framework",
+				"${BUILT_PRODUCTS_DIR}/RxCocoa/RxCocoa.framework",
+				"${BUILT_PRODUCTS_DIR}/RxRealm/RxRealm.framework",
+				"${BUILT_PRODUCTS_DIR}/RxSwift/RxSwift.framework",
+				"${BUILT_PRODUCTS_DIR}/RxSwiftExt/RxSwiftExt.framework",
+				"${BUILT_PRODUCTS_DIR}/SnapKit/SnapKit.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Action.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Kingfisher.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Realm.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RealmSwift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxCocoa.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxRealm.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxSwift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxSwiftExt.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SnapKit.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-WhiskyRecognizer/Pods-WhiskyRecognizer-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		E4B0427B78DF559B81B68247 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-WhiskyRecognizer/Pods-WhiskyRecognizer-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		E9DE5900C7FB7B499B548F90 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-WhiskyRecognizer-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		190EFF58208E0EE400749D2B /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				190EFF62208E0EE400749D2B /* ViewController.swift in Sources */,
+				190EFF76208E0F7400749D2B /* Coordinator.swift in Sources */,
+				19BB3637208E19BD00222757 /* HomeVC.swift in Sources */,
+				190EFF77208E0F7400749D2B /* BaseController.swift in Sources */,
+				19BB3639208E19C500222757 /* HomeVM.swift in Sources */,
 				190EFF60208E0EE400749D2B /* AppDelegate.swift in Sources */,
+				19BB3635208E19B400222757 /* HomeScene.swift in Sources */,
+				190EFF78208E0F7400749D2B /* CoordinatorDelegate.swift in Sources */,
+				190EFF7A208E0FD900749D2B /* BindableType.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		190EFF63208E0EE400749D2B /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				190EFF64208E0EE400749D2B /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		190EFF68208E0EE500749D2B /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -278,6 +411,7 @@
 		};
 		190EFF6F208E0EE500749D2B /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = D6B08DC4F128189B31A5708D /* Pods-WhiskyRecognizer.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
@@ -296,6 +430,7 @@
 		};
 		190EFF70208E0EE500749D2B /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = F550EA5135E829894AF64A49 /* Pods-WhiskyRecognizer.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;

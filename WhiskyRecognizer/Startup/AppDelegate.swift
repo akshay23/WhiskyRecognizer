@@ -13,9 +13,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
-
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+        
+        // Create new window object
+        window = UIWindow(frame: UIScreen.main.bounds)
+        
+        // Navigate to SignInScene
+        if let win = window {
+            let coordinator = Coordinator(window: win)
+            //let logInViewModel = LogInVM(coordinator: coordinator)
+            //let logInScene = LogInScene(logInVM: logInViewModel)
+            //coordinator.transition(toRoot: logInScene, shouldEncloseInNavigationController: false)
+            win.makeKeyAndVisible()
+        }
+        
         return true
     }
 
