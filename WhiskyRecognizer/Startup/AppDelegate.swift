@@ -21,9 +21,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Navigate to SignInScene
         if let win = window {
             let coordinator = Coordinator(window: win)
-            //let logInViewModel = LogInVM(coordinator: coordinator)
-            //let logInScene = LogInScene(logInVM: logInViewModel)
-            //coordinator.transition(toRoot: logInScene, shouldEncloseInNavigationController: false)
+            let homeViewModel = HomeVM(coordinator: coordinator)
+            let homeScene = HomeScene(homeVM: homeViewModel)
+            coordinator.transition(toRoot: homeScene, shouldEncloseInNavigationController: false)
             win.makeKeyAndVisible()
         }
         

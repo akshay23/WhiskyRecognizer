@@ -18,8 +18,13 @@ class HomeVC: UIViewController {
     
     private let disposeBag = DisposeBag()
     
+    private let watsonAPIKey = "72e8118cce72fac81547522406fe2528a2cc1839"
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        view.backgroundColor = UIColor.lightGray
     }
 }
 
