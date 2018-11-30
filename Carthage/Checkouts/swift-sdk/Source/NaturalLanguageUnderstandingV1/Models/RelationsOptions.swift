@@ -16,39 +16,39 @@
 
 import Foundation
 
-/** An option specifying if the relationships found between entities in the analyzed content should be returned. */
-public struct RelationsOptions {
+/**
+ Recognizes when two entities are related and identifies the type of relation. For example, an `awardedTo` relation
+ might connect the entities "Nobel Prize" and "Albert Einstein". See [Relation
+ types](/docs/services/natural-language-understanding/relations.html).
+ Supported languages: Arabic, English, German, Japanese, Korean, Spanish. Chinese, Dutch, French, Italian, and
+ Portuguese custom models are also supported.
+ */
+public struct RelationsOptions: Encodable {
 
-    /// Enter a custom model ID to override the default model.
+    /**
+     Enter a [custom model](/docs/services/natural-language-understanding/customizing.html) ID to override the default
+     model.
+     */
     public var model: String?
+
+    // Map each property name to the key that shall be used for encoding/decoding.
+    private enum CodingKeys: String, CodingKey {
+        case model = "model"
+    }
 
     /**
      Initialize a `RelationsOptions` with member variables.
 
-     - parameter model: Enter a custom model ID to override the default model.
+     - parameter model: Enter a [custom model](/docs/services/natural-language-understanding/customizing.html) ID to
+       override the default model.
 
      - returns: An initialized `RelationsOptions`.
     */
-    public init(model: String? = nil) {
+    public init(
+        model: String? = nil
+    )
+    {
         self.model = model
-    }
-}
-
-extension RelationsOptions: Codable {
-
-    private enum CodingKeys: String, CodingKey {
-        case model = "model"
-        static let allValues = [model]
-    }
-
-    public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        model = try container.decodeIfPresent(String.self, forKey: .model)
-    }
-
-    public func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encodeIfPresent(model, forKey: .model)
     }
 
 }

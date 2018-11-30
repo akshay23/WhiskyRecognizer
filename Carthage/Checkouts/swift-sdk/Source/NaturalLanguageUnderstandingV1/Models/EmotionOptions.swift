@@ -16,47 +16,45 @@
 
 import Foundation
 
-/** Whether or not to return emotion analysis of the content. */
-public struct EmotionOptions {
+/**
+ Detects anger, disgust, fear, joy, or sadness that is conveyed in the content or by the context around target phrases
+ specified in the targets parameter. You can analyze emotion for detected entities with `entities.emotion` and for
+ keywords with `keywords.emotion`.
+ Supported languages: English.
+ */
+public struct EmotionOptions: Encodable {
 
-    /// Set this to false to hide document-level emotion results.
+    /**
+     Set this to `false` to hide document-level emotion results.
+     */
     public var document: Bool?
 
-    /// Emotion results will be returned for each target string that is found in the document.
+    /**
+     Emotion results will be returned for each target string that is found in the document.
+     */
     public var targets: [String]?
+
+    // Map each property name to the key that shall be used for encoding/decoding.
+    private enum CodingKeys: String, CodingKey {
+        case document = "document"
+        case targets = "targets"
+    }
 
     /**
      Initialize a `EmotionOptions` with member variables.
 
-     - parameter document: Set this to false to hide document-level emotion results.
+     - parameter document: Set this to `false` to hide document-level emotion results.
      - parameter targets: Emotion results will be returned for each target string that is found in the document.
 
      - returns: An initialized `EmotionOptions`.
     */
-    public init(document: Bool? = nil, targets: [String]? = nil) {
+    public init(
+        document: Bool? = nil,
+        targets: [String]? = nil
+    )
+    {
         self.document = document
         self.targets = targets
-    }
-}
-
-extension EmotionOptions: Codable {
-
-    private enum CodingKeys: String, CodingKey {
-        case document = "document"
-        case targets = "targets"
-        static let allValues = [document, targets]
-    }
-
-    public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        document = try container.decodeIfPresent(Bool.self, forKey: .document)
-        targets = try container.decodeIfPresent([String].self, forKey: .targets)
-    }
-
-    public func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encodeIfPresent(document, forKey: .document)
-        try container.encodeIfPresent(targets, forKey: .targets)
     }
 
 }

@@ -14,7 +14,7 @@
  * limitations under the License.
  **/
 
-// swiftlint:disable function_body_length force_try force_unwrapping superfluous_disable_command
+// swiftlint:disable function_body_length force_try force_unwrapping file_length
 
 #if !os(Linux)
 import XCTest
@@ -41,9 +41,16 @@ class TextToSpeechPlaybackTests: XCTestCase {
 
     /** Instantiate Text to Speech instance. */
     func instantiateTextToSpeech() {
-        let username = Credentials.TextToSpeechUsername
-        let password = Credentials.TextToSpeechPassword
-        textToSpeech = TextToSpeech(username: username, password: password)
+        if let apiKey = WatsonCredentials.TextToSpeechAPIKey {
+            textToSpeech = TextToSpeech(apiKey: apiKey)
+        } else {
+            let username = WatsonCredentials.TextToSpeechUsername
+            let password = WatsonCredentials.TextToSpeechPassword
+            textToSpeech = TextToSpeech(username: username, password: password)
+        }
+        if let url = WatsonCredentials.TextToSpeechURL {
+            textToSpeech.serviceURL = url
+        }
         textToSpeech.defaultHeaders["X-Watson-Learning-Opt-Out"] = "true"
         textToSpeech.defaultHeaders["X-Watson-Test"] = "true"
     }

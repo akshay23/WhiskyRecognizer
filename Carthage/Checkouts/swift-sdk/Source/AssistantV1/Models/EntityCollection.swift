@@ -16,47 +16,25 @@
 
 import Foundation
 
-/** An array of entities. */
-public struct EntityCollection {
-
-    /// An array of objects describing the entities defined for the workspace.
-    public var entities: [EntityExport]
-
-    /// The pagination data for the returned objects.
-    public var pagination: Pagination
+/**
+ An array of entities.
+ */
+public struct EntityCollection: Decodable {
 
     /**
-     Initialize a `EntityCollection` with member variables.
+     An array of objects describing the entities defined for the workspace.
+     */
+    public var entities: [EntityExport]
 
-     - parameter entities: An array of objects describing the entities defined for the workspace.
-     - parameter pagination: The pagination data for the returned objects.
+    /**
+     The pagination data for the returned objects.
+     */
+    public var pagination: Pagination
 
-     - returns: An initialized `EntityCollection`.
-    */
-    public init(entities: [EntityExport], pagination: Pagination) {
-        self.entities = entities
-        self.pagination = pagination
-    }
-}
-
-extension EntityCollection: Codable {
-
+    // Map each property name to the key that shall be used for encoding/decoding.
     private enum CodingKeys: String, CodingKey {
         case entities = "entities"
         case pagination = "pagination"
-        static let allValues = [entities, pagination]
-    }
-
-    public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        entities = try container.decode([EntityExport].self, forKey: .entities)
-        pagination = try container.decode(Pagination.self, forKey: .pagination)
-    }
-
-    public func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(entities, forKey: .entities)
-        try container.encode(pagination, forKey: .pagination)
     }
 
 }

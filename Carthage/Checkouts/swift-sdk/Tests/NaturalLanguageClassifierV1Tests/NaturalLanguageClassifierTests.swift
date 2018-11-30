@@ -14,7 +14,7 @@
  * limitations under the License.
  **/
 
-// swiftlint:disable function_body_length force_try force_unwrapping superfluous_disable_command
+// swiftlint:disable function_body_length force_try force_unwrapping file_length
 
 import XCTest
 import Foundation
@@ -27,8 +27,8 @@ class NaturalLanguageClassifierTests: XCTestCase {
     // and `weather_data_train.csv` files. Be sure to update the `trainedClassifierId` property below!
 
     private var naturalLanguageClassifier: NaturalLanguageClassifier!
-    private let trainedClassifierId = "33c2fbx273-nlc-11743"
-    private let trainedClassifierName = "swift-sdk-test-classifier"
+    private let trainedClassifierId = "6b5ab4x398-nlc-95"
+    private let trainedClassifierName = "swift-sdk-test-classifier - DO NOT DELETE"
     private let temporaryClassifierName = "swift-sdk-temporary-classifier"
 
     private var metadataFile: URL!
@@ -52,6 +52,7 @@ class NaturalLanguageClassifierTests: XCTestCase {
             ("testListClassifiers", testListClassifiers),
             ("testGetClassifier", testGetClassifier),
             ("testClassify", testClassify),
+            ("testClassifyCollection", testClassifyCollection),
             ("testCreateClassifierWithMissingMetadata", testCreateClassifierWithMissingMetadata),
             ("testClassifyEmptyString", testClassifyEmptyString),
             ("testClassifyWithInvalidClassifier", testClassifyWithInvalidClassifier),
@@ -62,9 +63,16 @@ class NaturalLanguageClassifierTests: XCTestCase {
 
     /** Instantiate Natural Langauge Classifier instance. */
     func instantiateNaturalLanguageClassifier() {
-        let username = Credentials.NaturalLanguageClassifierUsername
-        let password = Credentials.NaturalLanguageClassifierPassword
-        naturalLanguageClassifier = NaturalLanguageClassifier(username: username, password: password)
+        if let apiKey = WatsonCredentials.NaturalLanguageClassifierAPIKey {
+            naturalLanguageClassifier = NaturalLanguageClassifier(apiKey: apiKey)
+        } else {
+            let username = WatsonCredentials.NaturalLanguageClassifierUsername
+            let password = WatsonCredentials.NaturalLanguageClassifierPassword
+            naturalLanguageClassifier = NaturalLanguageClassifier(username: username, password: password)
+        }
+        if let url = WatsonCredentials.NaturalLanguageClassifierURL {
+            naturalLanguageClassifier.serviceURL = url
+        }
         naturalLanguageClassifier.defaultHeaders["X-Watson-Learning-Opt-Out"] = "true"
         naturalLanguageClassifier.defaultHeaders["X-Watson-Test"] = "true"
     }
@@ -106,11 +114,11 @@ class NaturalLanguageClassifierTests: XCTestCase {
 
     /** Load a file used when creating a classifier. */
     func loadClassifierFile(name: String, withExtension: String) -> URL? {
-        #if os(iOS)
+        #if os(Linux)
+            let url = URL(fileURLWithPath: "Tests/NaturalLanguageClassifierV1Tests/" + name + "." + withExtension)
+        #else
             let bundle = Bundle(for: type(of: self))
             guard let url = bundle.url(forResource: name, withExtension: withExtension) else { return nil }
-        #else
-            let url = URL(fileURLWithPath: "Tests/NaturalLanguageClassifierV1Tests/" + name + "." + withExtension)
         #endif
         return url
     }
@@ -168,6 +176,26 @@ class NaturalLanguageClassifierTests: XCTestCase {
             XCTAssertEqual(classification.topClass, "temperature")
             XCTAssertNotNil(classification.classes)
             XCTAssertEqual(classification.classes!.count, 2)
+            expectation.fulfill()
+        }
+        waitForExpectations()
+    }
+
+    func testClassifyCollection() {
+        let expectation = self.expectation(description: "classifyCollection")
+        let text1 = "How hot will it be today?"
+        let text2 = "How sunny will it be today?"
+        let collection = [ClassifyInput(text: text1), ClassifyInput(text: text2)]
+        naturalLanguageClassifier.classifyCollection(classifierID: trainedClassifierId, collection: collection, failure: failWithError) {
+            classifications in
+            XCTAssertNotNil(classifications.classifierID)
+            XCTAssertEqual(classifications.classifierID, self.trainedClassifierId)
+            XCTAssertNotNil(classifications.collection)
+            XCTAssertEqual(classifications.collection!.count, 2)
+            XCTAssertEqual(classifications.collection![0].text, text1)
+            XCTAssertEqual(classifications.collection![0].topClass, "temperature")
+            XCTAssertEqual(classifications.collection![1].text, text2)
+            XCTAssertEqual(classifications.collection![1].topClass, "conditions")
             expectation.fulfill()
         }
         waitForExpectations()

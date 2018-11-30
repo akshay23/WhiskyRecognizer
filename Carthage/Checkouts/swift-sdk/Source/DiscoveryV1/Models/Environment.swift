@@ -16,42 +16,94 @@
 
 import Foundation
 
-/** Details about an environment. */
+/**
+ Details about an environment.
+ */
 public struct Environment: Decodable {
 
-    /// Status of the environment.
+    /**
+     Current status of the environment. `resizing` is displayed when a request to increase the environment size has been
+     made, but is still in the process of being completed.
+     */
     public enum Status: String {
         case active = "active"
         case pending = "pending"
         case maintenance = "maintenance"
+        case resizing = "resizing"
     }
 
-    /// Unique identifier for the environment.
+    /**
+     Current size of the environment.
+     */
+    public enum Size: String {
+        case lt = "LT"
+        case xs = "XS"
+        case s = "S"
+        case ms = "MS"
+        case m = "M"
+        case ml = "ML"
+        case l = "L"
+        case xl = "XL"
+        case xxl = "XXL"
+        case xxxl = "XXXL"
+    }
+
+    /**
+     Unique identifier for the environment.
+     */
     public var environmentID: String?
 
-    /// Name that identifies the environment.
+    /**
+     Name that identifies the environment.
+     */
     public var name: String?
 
-    /// Description of the environment.
+    /**
+     Description of the environment.
+     */
     public var description: String?
 
-    /// Creation date of the environment, in the format yyyy-MM-dd'T'HH:mm:ss.SSS'Z'.
+    /**
+     Creation date of the environment, in the format `yyyy-MM-dd'T'HH:mm:ss.SSS'Z'`.
+     */
     public var created: String?
 
-    /// Date of most recent environment update, in the format yyyy-MM-dd'T'HH:mm:ss.SSS'Z'.
+    /**
+     Date of most recent environment update, in the format `yyyy-MM-dd'T'HH:mm:ss.SSS'Z'`.
+     */
     public var updated: String?
 
-    /// Status of the environment.
+    /**
+     Current status of the environment. `resizing` is displayed when a request to increase the environment size has been
+     made, but is still in the process of being completed.
+     */
     public var status: String?
 
-    /// If true, then the environment contains read-only collections which are maintained by IBM.
+    /**
+     If `true`, the environment contains read-only collections that are maintained by IBM.
+     */
     public var readOnly: Bool?
 
-    /// **Deprecated**: Size of the environment.
-    public var size: Int?
+    /**
+     Current size of the environment.
+     */
+    public var size: String?
 
-    /// Details about the resource usage and capacity of the environment.
+    /**
+     The new size requested for this environment. Only returned when the environment *status* is `resizing`.
+     *Note:* Querying and indexing can still be performed during an environment upsize.
+     */
+    public var requestedSize: String?
+
+    /**
+     Details about the resource usage and capacity of the environment.
+     */
     public var indexCapacity: IndexCapacity?
+
+    /**
+     Information about Continuous Relevancy Training for this environment.
+     */
+    public var searchStatus: SearchStatus?
 
     // Map each property name to the key that shall be used for encoding/decoding.
     private enum CodingKeys: String, CodingKey {
@@ -63,7 +115,9 @@ public struct Environment: Decodable {
         case status = "status"
         case readOnly = "read_only"
         case size = "size"
+        case requestedSize = "requested_size"
         case indexCapacity = "index_capacity"
+        case searchStatus = "search_status"
     }
 
 }

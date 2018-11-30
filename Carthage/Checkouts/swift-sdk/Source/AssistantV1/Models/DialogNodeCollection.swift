@@ -16,47 +16,25 @@
 
 import Foundation
 
-/** An array of dialog nodes. */
-public struct DialogNodeCollection {
-
-    /// An array of objects describing the dialog nodes defined for the workspace.
-    public var dialogNodes: [DialogNode]
-
-    /// The pagination data for the returned objects.
-    public var pagination: Pagination
+/**
+ An array of dialog nodes.
+ */
+public struct DialogNodeCollection: Decodable {
 
     /**
-     Initialize a `DialogNodeCollection` with member variables.
+     An array of objects describing the dialog nodes defined for the workspace.
+     */
+    public var dialogNodes: [DialogNode]
 
-     - parameter dialogNodes: An array of objects describing the dialog nodes defined for the workspace.
-     - parameter pagination: The pagination data for the returned objects.
+    /**
+     The pagination data for the returned objects.
+     */
+    public var pagination: Pagination
 
-     - returns: An initialized `DialogNodeCollection`.
-    */
-    public init(dialogNodes: [DialogNode], pagination: Pagination) {
-        self.dialogNodes = dialogNodes
-        self.pagination = pagination
-    }
-}
-
-extension DialogNodeCollection: Codable {
-
+    // Map each property name to the key that shall be used for encoding/decoding.
     private enum CodingKeys: String, CodingKey {
         case dialogNodes = "dialog_nodes"
         case pagination = "pagination"
-        static let allValues = [dialogNodes, pagination]
-    }
-
-    public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        dialogNodes = try container.decode([DialogNode].self, forKey: .dialogNodes)
-        pagination = try container.decode(Pagination.self, forKey: .pagination)
-    }
-
-    public func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(dialogNodes, forKey: .dialogNodes)
-        try container.encode(pagination, forKey: .pagination)
     }
 
 }

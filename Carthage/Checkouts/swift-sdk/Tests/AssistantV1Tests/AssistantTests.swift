@@ -14,16 +14,17 @@
  * limitations under the License.
  **/
 
-// swiftlint:disable function_body_length force_try force_unwrapping superfluous_disable_command
+// swiftlint:disable function_body_length force_try force_unwrapping file_length
 
 import XCTest
 import Foundation
 import AssistantV1
+import RestKit
 
 class AssistantTests: XCTestCase {
 
     private var assistant: Assistant!
-    private let workspaceID = Credentials.AssistantWorkspace
+    private let workspaceID = WatsonCredentials.AssistantWorkspace
 
     // MARK: - Test Configuration
 
@@ -72,6 +73,7 @@ class AssistantTests: XCTestCase {
             ("testCreateAndDeleteEntity", testCreateAndDeleteEntity),
             ("testCreateUpdateAndDeleteEntity", testCreateUpdateAndDeleteEntity),
             ("testGetEntity", testGetEntity),
+            ("testListMentions", testListMentions),
             ("testListAllValues", testListAllValues),
             ("testCreateUpdateAndDeleteValue", testCreateUpdateAndDeleteValue),
             ("testGetValue", testGetValue),
@@ -89,15 +91,23 @@ class AssistantTests: XCTestCase {
             // ("testListLogs", testListLogs), // temporarily disabled due to server-side bug
             ("testMessageUnknownWorkspace", testMessageUnknownWorkspace),
             ("testMessageInvalidWorkspaceID", testMessageInvalidWorkspaceID),
+            ("testInvalidServiceURL", testInvalidServiceURL),
         ]
     }
 
     /** Instantiate Assistant. */
     func instantiateAssistant() {
-        let username = Credentials.AssistantUsername
-        let password = Credentials.AssistantPassword
-        let version = "2018-02-16"
-        assistant = Assistant(username: username, password: password, version: version)
+        let version = "2018-11-01"
+        if let apiKey = WatsonCredentials.AssistantAPIKey {
+            assistant = Assistant(version: version, apiKey: apiKey)
+        } else {
+            let username = WatsonCredentials.AssistantUsername
+            let password = WatsonCredentials.AssistantPassword
+            assistant = Assistant(username: username, password: password, version: version)
+        }
+        if let url = WatsonCredentials.AssistantURL {
+            assistant.serviceURL = url
+        }
         assistant.defaultHeaders["X-Watson-Learning-Opt-Out"] = "true"
         assistant.defaultHeaders["X-Watson-Test"] = "true"
     }
@@ -118,7 +128,7 @@ class AssistantTests: XCTestCase {
     }
 
     /** Wait for expectations. */
-    func waitForExpectations(timeout: TimeInterval = 5.0) {
+    func waitForExpectations(timeout: TimeInterval = 10.0) {
         waitForExpectations(timeout: timeout) { error in
             XCTAssertNil(error, "Timeout")
         }
@@ -130,8 +140,7 @@ class AssistantTests: XCTestCase {
         let description1 = "Start a conversation."
         let expectation1 = self.expectation(description: description1)
 
-        let response1 = ["Hi. It looks like a nice drive today. What would you like me to do?"]
-        let nodes1 = ["node_1_1467221909631"]
+        let response1 = ["Hi. It looks like a nice drive today. What would you like me to do?  "]
 
         var context: Context?
         assistant.message(workspaceID: workspaceID, nodesVisitedDetails: true, failure: failWithError) {
@@ -157,11 +166,10 @@ class AssistantTests: XCTestCase {
             XCTAssertTrue(response.output.logMessages.isEmpty)
             XCTAssertEqual(response.output.text, response1)
             XCTAssertNotNil(response.output.nodesVisited)
-            XCTAssertEqual(response.output.nodesVisited!, nodes1)
+            XCTAssertEqual(response.output.nodesVisited!.count, 1)
             XCTAssertNotNil(response.output.nodesVisitedDetails)
             XCTAssertNotNil(response.output.nodesVisitedDetails!.first)
             XCTAssertNotNil(response.output.nodesVisitedDetails!.first!.dialogNode)
-            XCTAssertEqual(response.output.nodesVisitedDetails!.first!.dialogNode!, nodes1.first!)
 
             context = response.context
             expectation1.fulfill()
@@ -173,8 +181,7 @@ class AssistantTests: XCTestCase {
 
         let input = InputData(text: "Turn on the radio.")
         let request = MessageRequest(input: input, context: context!)
-        let response2 = ["", "Sure thing! Which genre would you prefer? Jazz is my personal favorite.."]
-        let nodes2 = ["node_1_1467232431348", "node_2_1467232480480", "node_1_1467994455318"]
+        let response2 = ["Sure thing! Which genre would you prefer? Jazz is my personal favorite."]
 
         assistant.message(workspaceID: workspaceID, request: request, failure: failWithError) {
             response in
@@ -204,7 +211,8 @@ class AssistantTests: XCTestCase {
             // verify output
             XCTAssertTrue(response.output.logMessages.isEmpty)
             XCTAssertEqual(response.output.text, response2)
-            XCTAssertEqual(response.output.nodesVisited!, nodes2)
+            XCTAssertNotNil(response.output.nodesVisited)
+            XCTAssertEqual(response.output.nodesVisited!.count, 3)
 
             expectation2.fulfill()
         }
@@ -403,7 +411,6 @@ class AssistantTests: XCTestCase {
                 XCTAssertNotNil(workspace.workspaceID)
             }
             XCTAssertNotNil(workspaceResponse.pagination.refreshUrl)
-            XCTAssertNotNil(workspaceResponse.pagination.nextUrl)
             expectation.fulfill()
         }
         waitForExpectations()
@@ -424,7 +431,7 @@ class AssistantTests: XCTestCase {
             XCTAssertNotNil(workspaceResponse.pagination.refreshUrl)
             XCTAssertNotNil(workspaceResponse.pagination.total)
             XCTAssertNotNil(workspaceResponse.pagination.matched)
-            XCTAssertEqual(workspaceResponse.pagination.total, workspaceResponse.workspaces.count)
+            XCTAssertGreaterThanOrEqual(workspaceResponse.pagination.total!, workspaceResponse.workspaces.count)
             expectation.fulfill()
         }
         waitForExpectations()
@@ -447,7 +454,9 @@ class AssistantTests: XCTestCase {
         let workspaceDialogNode = CreateDialogNode(dialogNode: "DialogNode1", description: "description of DialogNode1")
         let workspaceCounterexample = CreateCounterexample(text: "This is a counterexample")
 
-        let createWorkspaceBody = CreateWorkspace(name: workspaceName, description: workspaceDescription, language: workspaceLanguage, intents: [workspaceIntent], entities: [workspaceEntity], dialogNodes: [workspaceDialogNode], counterexamples: [workspaceCounterexample], metadata: workspaceMetadata)
+        let createWorkspaceBody = CreateWorkspace(name: workspaceName, description: workspaceDescription, language: workspaceLanguage, intents: [workspaceIntent],
+                                                  entities: [workspaceEntity], dialogNodes: [workspaceDialogNode], counterexamples: [workspaceCounterexample],
+                                                  metadata: workspaceMetadata)
         assistant.createWorkspace(properties: createWorkspaceBody, failure: failWithError) { workspace in
             XCTAssertEqual(workspace.name, workspaceName)
             XCTAssertEqual(workspace.description, workspaceDescription)
@@ -457,7 +466,7 @@ class AssistantTests: XCTestCase {
             newWorkspace = workspace.workspaceID
             expectation1.fulfill()
         }
-        waitForExpectations(timeout: 10.0)
+        waitForExpectations(timeout: 20.0)
 
         guard let newWorkspaceID = newWorkspace else {
             XCTFail("Failed to get the ID of the newly created workspace.")
@@ -500,7 +509,7 @@ class AssistantTests: XCTestCase {
 
             expectation2.fulfill()
         }
-        waitForExpectations(timeout: 10.0)
+        waitForExpectations(timeout: 20.0)
 
         let description3 = "Delete the newly created workspace."
         let expectation3 = expectation(description: description3)
@@ -735,7 +744,8 @@ class AssistantTests: XCTestCase {
         let updatedIntentName = "updated-name-for-\(newIntentName)"
         let updatedIntentDescription = "updated-description-for-\(newIntentName)"
         let updatedExample1 = CreateExample(text: "updated example for \(newIntentName)")
-        assistant.updateIntent(workspaceID: workspaceID, intent: newIntentName, newIntent: updatedIntentName, newDescription: updatedIntentDescription, newExamples: [updatedExample1], failure: failWithError) { intent in
+        assistant.updateIntent(workspaceID: workspaceID, intent: newIntentName, newIntent: updatedIntentName, newDescription: updatedIntentDescription,
+                               newExamples: [updatedExample1], failure: failWithError) { intent in
             XCTAssertEqual(intent.intentName, updatedIntentName)
             XCTAssertEqual(intent.description, updatedIntentDescription)
             expectation2.fulfill()
@@ -784,7 +794,7 @@ class AssistantTests: XCTestCase {
             XCTAssertNotNil(examples.pagination.refreshUrl)
             XCTAssertNotNil(examples.pagination.total)
             XCTAssertNotNil(examples.pagination.matched)
-            XCTAssertEqual(examples.pagination.total, examples.examples.count)
+            XCTAssertGreaterThanOrEqual(examples.pagination.total!, examples.examples.count)
             expectation.fulfill()
         }
         waitForExpectations()
@@ -958,7 +968,7 @@ class AssistantTests: XCTestCase {
         let description = "Get details of a specific counterexample."
         let expectation = self.expectation(description: description)
 
-        let exampleText = "I want financial advice today."
+        let exampleText = "when will it be funny"
         assistant.getCounterexample(workspaceID: workspaceID, text: exampleText, includeAudit: true, failure: failWithError) { counterexample in
             XCTAssertNotNil(counterexample.created)
             XCTAssertNotNil(counterexample.updated)
@@ -1155,6 +1165,31 @@ class AssistantTests: XCTestCase {
                 XCTAssertNotNil(entityExport.updated)
                 expectation.fulfill()
             }
+        }
+        waitForExpectations()
+    }
+
+    // MARK: - Mentions
+
+    func testListMentions() {
+        let description = "List all the mentions for an entity."
+        let expectation = self.expectation(description: description)
+        let entityName = "appliance"
+        assistant.listMentions(
+            workspaceID: workspaceID,
+            entity: entityName,
+            export: true,
+            includeAudit: true,
+            failure: failWithError) {
+                mentionCollection in
+                for mention in mentionCollection.examples {
+                    XCTAssertNotNil(mention.exampleText)
+                    XCTAssertNotNil(mention.intentName)
+                    XCTAssertNotNil(mention.location)
+                    XCTAssert(mention.location.count == 2)
+                }
+                XCTAssertNotNil(mentionCollection.pagination.refreshUrl)
+                expectation.fulfill()
         }
         waitForExpectations()
     }
@@ -1374,7 +1409,6 @@ class AssistantTests: XCTestCase {
             }
             XCTAssertGreaterThan(nodes.dialogNodes.count, 0)
             XCTAssertNotNil(nodes.pagination.refreshUrl)
-            XCTAssertNil(nodes.pagination.nextUrl)
             XCTAssertNotNil(nodes.pagination.total)
             XCTAssertNotNil(nodes.pagination.matched)
             expectation.fulfill()
@@ -1392,12 +1426,12 @@ class AssistantTests: XCTestCase {
             conditions: "#order_pizza",
             parent: nil,
             previousSibling: nil,
-            output: [
+            output: DialogNodeOutput(additionalProperties: [
                 "text": .object([
                     "selection_policy": .string("random"),
                     "values": .array([.string("Yes you can!"), .string("Of course!")]),
                 ]),
-            ],
+            ]),
             context: nil,
             metadata: ["swift-sdk-test": .boolean(true)],
             nextStep: nil,
@@ -1413,7 +1447,7 @@ class AssistantTests: XCTestCase {
             XCTAssertEqual(dialogNode.conditions, node.conditions)
             XCTAssertNil(node.parent)
             XCTAssertNil(node.previousSibling)
-            XCTAssertEqual(dialogNode.output!, node.output!)
+            XCTAssertEqual(dialogNode.output!.additionalProperties["text"], node.output!.additionalProperties["text"])
             XCTAssertNil(node.context)
             XCTAssertEqual(dialogNode.metadata!, node.metadata!)
             XCTAssertNil(node.nextStep)
@@ -1508,14 +1542,8 @@ class AssistantTests: XCTestCase {
     func testMessageUnknownWorkspace() {
         let description = "Start a conversation with an invalid workspace."
         let expectation = self.expectation(description: description)
-
         let workspaceID = "this-id-is-unknown"
-        let failure = { (error: Error) in
-            // The following check fails on Linux with Swift 3.1.1 and earlier, but has been fixed in later releases.
-            XCTAssert(error.localizedDescription.contains("not a valid GUID"))
-            expectation.fulfill()
-        }
-
+        let failure = { (error: Error) in expectation.fulfill() }
         assistant.message(workspaceID: workspaceID, failure: failure, success: failWithResult)
         waitForExpectations()
     }
@@ -1523,15 +1551,26 @@ class AssistantTests: XCTestCase {
     func testMessageInvalidWorkspaceID() {
         let description = "Start a conversation with an invalid workspace."
         let expectation = self.expectation(description: description)
+        let workspaceID = "this id is invalid"
+        let failure = { (error: Error) in expectation.fulfill() }
+        assistant.message(workspaceID: workspaceID, failure: failure, success: failWithResult)
+        waitForExpectations()
+    }
 
-        let workspaceID = "this id is invalid"   // workspace id with spaces should gracefully return error
+    func testInvalidServiceURL() {
+        let description = "Start a conversation with an invalid workspace."
+        let expectation = self.expectation(description: description)
+        assistant.serviceURL = "this is broken"
         let failure = { (error: Error) in
-            // The following check fails on Linux with Swift 3.1.1 and earlier, but has been fixed in later releases.
-            XCTAssert(error.localizedDescription.contains("not a valid GUID"))
+            switch error {
+            case RestError.badURL:
+                break
+            default:
+                XCTFail("Unexpected error response")
+            }
             expectation.fulfill()
         }
-
-        assistant.message(workspaceID: workspaceID, failure: failure, success: failWithResult)
+        assistant.listWorkspaces(failure: failure, success: failWithResult)
         waitForExpectations()
     }
 }

@@ -16,66 +16,75 @@
 
 import Foundation
 
-/** Analysis features and options. */
-public struct Features {
-
-    /// Whether or not to return the concepts that are mentioned in the analyzed text.
-    public var concepts: ConceptsOptions?
-
-    /// Whether or not to extract the emotions implied in the analyzed text.
-    public var emotion: EmotionOptions?
-
-    /// Whether or not to extract detected entity objects from the analyzed text.
-    public var entities: EntitiesOptions?
-
-    /// Whether or not to return the keywords in the analyzed text.
-    public var keywords: KeywordsOptions?
-
-    /// Whether or not the author, publication date, and title of the analyzed text should be returned. This parameter is only available for URL and HTML input.
-    public var metadata: MetadataOptions?
-
-    /// Whether or not to return the relationships between detected entities in the analyzed text.
-    public var relations: RelationsOptions?
-
-    /// Whether or not to return the subject-action-object relations from the analyzed text.
-    public var semanticRoles: SemanticRolesOptions?
-
-    /// Whether or not to return the overall sentiment of the analyzed text.
-    public var sentiment: SentimentOptions?
-
-    /// Whether or not to return the high level category the content is categorized as (i.e. news, art).
-    public var categories: CategoriesOptions?
+/**
+ Analysis features and options.
+ */
+public struct Features: Encodable {
 
     /**
-     Initialize a `Features` with member variables.
+     Returns high-level concepts in the content. For example, a research paper about deep learning might return the
+     concept, "Artificial Intelligence" although the term is not mentioned.
+     Supported languages: English, French, German, Japanese, Korean, Portuguese, Spanish.
+     */
+    public var concepts: ConceptsOptions?
 
-     - parameter concepts: Whether or not to return the concepts that are mentioned in the analyzed text.
-     - parameter emotion: Whether or not to extract the emotions implied in the analyzed text.
-     - parameter entities: Whether or not to extract detected entity objects from the analyzed text.
-     - parameter keywords: Whether or not to return the keywords in the analyzed text.
-     - parameter metadata: Whether or not the author, publication date, and title of the analyzed text should be returned. This parameter is only available for URL and HTML input.
-     - parameter relations: Whether or not to return the relationships between detected entities in the analyzed text.
-     - parameter semanticRoles: Whether or not to return the subject-action-object relations from the analyzed text.
-     - parameter sentiment: Whether or not to return the overall sentiment of the analyzed text.
-     - parameter categories: Whether or not to return the high level category the content is categorized as (i.e. news, art).
+    /**
+     Detects anger, disgust, fear, joy, or sadness that is conveyed in the content or by the context around target
+     phrases specified in the targets parameter. You can analyze emotion for detected entities with `entities.emotion`
+     and for keywords with `keywords.emotion`.
+     Supported languages: English
+     */
+    public var emotion: EmotionOptions?
 
-     - returns: An initialized `Features`.
-    */
-    public init(concepts: ConceptsOptions? = nil, emotion: EmotionOptions? = nil, entities: EntitiesOptions? = nil, keywords: KeywordsOptions? = nil, metadata: MetadataOptions? = nil, relations: RelationsOptions? = nil, semanticRoles: SemanticRolesOptions? = nil, sentiment: SentimentOptions? = nil, categories: CategoriesOptions? = nil) {
-        self.concepts = concepts
-        self.emotion = emotion
-        self.entities = entities
-        self.keywords = keywords
-        self.metadata = metadata
-        self.relations = relations
-        self.semanticRoles = semanticRoles
-        self.sentiment = sentiment
-        self.categories = categories
-    }
-}
+    /**
+     Identifies people, cities, organizations, and other entities in the content. See [Entity types and
+     subtypes](/docs/services/natural-language-understanding/entity-types.html).
+     Supported languages: English, French, German, Italian, Japanese, Korean, Portuguese, Russian, Spanish, Swedish.
+     Arabic, Chinese, and Dutch custom models are also supported.
+     */
+    public var entities: EntitiesOptions?
 
-extension Features: Codable {
+    /**
+     Returns important keywords in the content.
+     Supported languages: English, French, German, Italian, Japanese, Korean, Portuguese, Russian, Spanish, Swedish.
+     */
+    public var keywords: KeywordsOptions?
 
+    /**
+     Returns information from the document, including author name, title, RSS/ATOM feeds, prominent page image, and
+     publication date. Supports URL and HTML input types only.
+     */
+    public var metadata: MetadataOptions?
+
+    /**
+     Recognizes when two entities are related and identifies the type of relation. For example, an `awardedTo` relation
+     might connect the entities "Nobel Prize" and "Albert Einstein". See [Relation
+     types](/docs/services/natural-language-understanding/relations.html).
+     Supported languages: Arabic, English, German, Japanese, Korean, Spanish. Chinese, Dutch, French, Italian, and
+     Portuguese custom models are also supported.
+     */
+    public var relations: RelationsOptions?
+
+    /**
+     Parses sentences into subject, action, and object form.
+     Supported languages: English, German, Japanese, Korean, Spanish.
+     */
+    public var semanticRoles: SemanticRolesOptions?
+
+    /**
+     Analyzes the general sentiment of your content or the sentiment toward specific target phrases. You can analyze
+     sentiment for detected entities with `entities.sentiment` and for keywords with `keywords.sentiment`.
+      Supported languages: Arabic, English, French, German, Italian, Japanese, Korean, Portuguese, Russian, Spanish
+     */
+    public var sentiment: SentimentOptions?
+
+    /**
+     Returns a five-level taxonomy of the content. The top three categories are returned.
+     Supported languages: Arabic, English, French, German, Italian, Japanese, Korean, Portuguese, Spanish.
+     */
+    public var categories: CategoriesOptions?
+
+    // Map each property name to the key that shall be used for encoding/decoding.
     private enum CodingKeys: String, CodingKey {
         case concepts = "concepts"
         case emotion = "emotion"
@@ -86,33 +95,63 @@ extension Features: Codable {
         case semanticRoles = "semantic_roles"
         case sentiment = "sentiment"
         case categories = "categories"
-        static let allValues = [concepts, emotion, entities, keywords, metadata, relations, semanticRoles, sentiment, categories]
     }
 
-    public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        concepts = try container.decodeIfPresent(ConceptsOptions.self, forKey: .concepts)
-        emotion = try container.decodeIfPresent(EmotionOptions.self, forKey: .emotion)
-        entities = try container.decodeIfPresent(EntitiesOptions.self, forKey: .entities)
-        keywords = try container.decodeIfPresent(KeywordsOptions.self, forKey: .keywords)
-        metadata = try container.decodeIfPresent(MetadataOptions.self, forKey: .metadata)
-        relations = try container.decodeIfPresent(RelationsOptions.self, forKey: .relations)
-        semanticRoles = try container.decodeIfPresent(SemanticRolesOptions.self, forKey: .semanticRoles)
-        sentiment = try container.decodeIfPresent(SentimentOptions.self, forKey: .sentiment)
-        categories = try container.decodeIfPresent(CategoriesOptions.self, forKey: .categories)
-    }
+    /**
+     Initialize a `Features` with member variables.
 
-    public func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encodeIfPresent(concepts, forKey: .concepts)
-        try container.encodeIfPresent(emotion, forKey: .emotion)
-        try container.encodeIfPresent(entities, forKey: .entities)
-        try container.encodeIfPresent(keywords, forKey: .keywords)
-        try container.encodeIfPresent(metadata, forKey: .metadata)
-        try container.encodeIfPresent(relations, forKey: .relations)
-        try container.encodeIfPresent(semanticRoles, forKey: .semanticRoles)
-        try container.encodeIfPresent(sentiment, forKey: .sentiment)
-        try container.encodeIfPresent(categories, forKey: .categories)
+     - parameter concepts: Returns high-level concepts in the content. For example, a research paper about deep
+       learning might return the concept, "Artificial Intelligence" although the term is not mentioned.
+       Supported languages: English, French, German, Japanese, Korean, Portuguese, Spanish.
+     - parameter emotion: Detects anger, disgust, fear, joy, or sadness that is conveyed in the content or by the
+       context around target phrases specified in the targets parameter. You can analyze emotion for detected entities
+       with `entities.emotion` and for keywords with `keywords.emotion`.
+       Supported languages: English
+     - parameter entities: Identifies people, cities, organizations, and other entities in the content. See [Entity
+       types and subtypes](/docs/services/natural-language-understanding/entity-types.html).
+       Supported languages: English, French, German, Italian, Japanese, Korean, Portuguese, Russian, Spanish, Swedish.
+       Arabic, Chinese, and Dutch custom models are also supported.
+     - parameter keywords: Returns important keywords in the content.
+       Supported languages: English, French, German, Italian, Japanese, Korean, Portuguese, Russian, Spanish, Swedish.
+     - parameter metadata: Returns information from the document, including author name, title, RSS/ATOM feeds,
+       prominent page image, and publication date. Supports URL and HTML input types only.
+     - parameter relations: Recognizes when two entities are related and identifies the type of relation. For
+       example, an `awardedTo` relation might connect the entities "Nobel Prize" and "Albert Einstein". See [Relation
+       types](/docs/services/natural-language-understanding/relations.html).
+       Supported languages: Arabic, English, German, Japanese, Korean, Spanish. Chinese, Dutch, French, Italian, and
+       Portuguese custom models are also supported.
+     - parameter semanticRoles: Parses sentences into subject, action, and object form.
+       Supported languages: English, German, Japanese, Korean, Spanish.
+     - parameter sentiment: Analyzes the general sentiment of your content or the sentiment toward specific target
+       phrases. You can analyze sentiment for detected entities with `entities.sentiment` and for keywords with
+       `keywords.sentiment`.
+        Supported languages: Arabic, English, French, German, Italian, Japanese, Korean, Portuguese, Russian, Spanish
+     - parameter categories: Returns a five-level taxonomy of the content. The top three categories are returned.
+       Supported languages: Arabic, English, French, German, Italian, Japanese, Korean, Portuguese, Spanish.
+
+     - returns: An initialized `Features`.
+    */
+    public init(
+        concepts: ConceptsOptions? = nil,
+        emotion: EmotionOptions? = nil,
+        entities: EntitiesOptions? = nil,
+        keywords: KeywordsOptions? = nil,
+        metadata: MetadataOptions? = nil,
+        relations: RelationsOptions? = nil,
+        semanticRoles: SemanticRolesOptions? = nil,
+        sentiment: SentimentOptions? = nil,
+        categories: CategoriesOptions? = nil
+    )
+    {
+        self.concepts = concepts
+        self.emotion = emotion
+        self.entities = entities
+        self.keywords = keywords
+        self.metadata = metadata
+        self.relations = relations
+        self.semanticRoles = semanticRoles
+        self.sentiment = sentiment
+        self.categories = categories
     }
 
 }

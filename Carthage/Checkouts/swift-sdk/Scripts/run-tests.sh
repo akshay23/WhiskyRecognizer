@@ -10,33 +10,8 @@
 # the device to build for
 DESTINATION="OS=11.3,name=iPhone 7"
 
-# the exit code of each build command
-EXIT_CODES=()
-
-# the schemes to build
-SCHEMES=(
-	"AssistantV1"
-	"ConversationV1"
-	"DiscoveryV1"
-	"LanguageTranslatorV2"
-	"NaturalLanguageClassifierV1"
-	"NaturalLanguageUnderstandingV1"
-	"PersonalityInsightsV3"
-	"SpeechToTextV1"
-	"TextToSpeechV1"
-	"ToneAnalyzerV3"
-	"VisualRecognitionV3"
-)
-
-####################
-# Dependencies
-####################
-
-brew update
-brew outdated carthage || brew upgrade carthage
-carthage bootstrap --platform iOS
-
-brew outdated swiftlint || brew upgrade swiftlint
+# the schemes to build, which must be invoked from the root directory of the project
+SCHEMES=$(xcodebuild -list | awk 'schemes { if (NF>0) { print $1 } } /Schemes:$/ { schemes = 1 }')
 
 ####################
 # Build and Test
@@ -47,10 +22,12 @@ brew outdated swiftlint || brew upgrade swiftlint
 # (required to check status code when using xcpretty)
 set -o pipefail
 
+# Make sure RC is not set from the parent environment
+unset RC
+
 # build each scheme
-for SCHEME in ${SCHEMES[@]}; do
-	xcodebuild -scheme "$SCHEME" -destination "$DESTINATION" test | xcpretty
-	EXIT_CODES+=($?)
+for SCHEME in ${SCHEMES}; do
+	xcodebuild -scheme "$SCHEME" -destination "$DESTINATION" test | xcpretty || RC=${RC:-$?}
 done
 
 ####################
@@ -58,10 +35,4 @@ done
 ####################
 
 # exit with the first non-zero status or zero if all builds exited successfully
-for EXIT_CODE in ${EXIT_CODES[@]}; do
-	if [ $EXIT_CODE -ne 0 ]
-	then
-		exit $EXIT_CODE
-	fi
-done
-exit 0
+exit ${RC:-0}

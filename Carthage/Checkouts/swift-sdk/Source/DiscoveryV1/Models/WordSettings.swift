@@ -16,7 +16,9 @@
 
 import Foundation
 
-/** A list of Word conversion settings. */
+/**
+ A list of Word conversion settings.
+ */
 public struct WordSettings: Codable {
 
     public var heading: WordHeadingDetection?
@@ -33,7 +35,10 @@ public struct WordSettings: Codable {
 
      - returns: An initialized `WordSettings`.
     */
-    public init(heading: WordHeadingDetection? = nil) {
+    public init(
+        heading: WordHeadingDetection? = nil
+    )
+    {
         self.heading = heading
     }
 

@@ -16,55 +16,52 @@
 
 import Foundation
 
-/** An option indicating whether or not important keywords from the analyzed content should be returned. */
-public struct KeywordsOptions {
+/**
+ Returns important keywords in the content.
+ Supported languages: English, French, German, Italian, Japanese, Korean, Portuguese, Russian, Spanish, Swedish.
+ */
+public struct KeywordsOptions: Encodable {
 
-    /// Maximum number of keywords to return.
+    /**
+     Maximum number of keywords to return.
+     */
     public var limit: Int?
 
-    /// Set this to true to return sentiment information for detected keywords.
+    /**
+     Set this to `true` to return sentiment information for detected keywords.
+     */
     public var sentiment: Bool?
 
-    /// Set this to true to analyze emotion for detected keywords.
+    /**
+     Set this to `true` to analyze emotion for detected keywords.
+     */
     public var emotion: Bool?
+
+    // Map each property name to the key that shall be used for encoding/decoding.
+    private enum CodingKeys: String, CodingKey {
+        case limit = "limit"
+        case sentiment = "sentiment"
+        case emotion = "emotion"
+    }
 
     /**
      Initialize a `KeywordsOptions` with member variables.
 
      - parameter limit: Maximum number of keywords to return.
-     - parameter sentiment: Set this to true to return sentiment information for detected keywords.
-     - parameter emotion: Set this to true to analyze emotion for detected keywords.
+     - parameter sentiment: Set this to `true` to return sentiment information for detected keywords.
+     - parameter emotion: Set this to `true` to analyze emotion for detected keywords.
 
      - returns: An initialized `KeywordsOptions`.
     */
-    public init(limit: Int? = nil, sentiment: Bool? = nil, emotion: Bool? = nil) {
+    public init(
+        limit: Int? = nil,
+        sentiment: Bool? = nil,
+        emotion: Bool? = nil
+    )
+    {
         self.limit = limit
         self.sentiment = sentiment
         self.emotion = emotion
-    }
-}
-
-extension KeywordsOptions: Codable {
-
-    private enum CodingKeys: String, CodingKey {
-        case limit = "limit"
-        case sentiment = "sentiment"
-        case emotion = "emotion"
-        static let allValues = [limit, sentiment, emotion]
-    }
-
-    public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        limit = try container.decodeIfPresent(Int.self, forKey: .limit)
-        sentiment = try container.decodeIfPresent(Bool.self, forKey: .sentiment)
-        emotion = try container.decodeIfPresent(Bool.self, forKey: .emotion)
-    }
-
-    public func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encodeIfPresent(limit, forKey: .limit)
-        try container.encodeIfPresent(sentiment, forKey: .sentiment)
-        try container.encodeIfPresent(emotion, forKey: .emotion)
     }
 
 }

@@ -17,38 +17,36 @@
 import Foundation
 
 /** CreateSynonym. */
-public struct CreateSynonym {
+internal struct CreateSynonym: Encodable {
 
-    /// The text of the synonym. This string must conform to the following restrictions:  - It cannot contain carriage return, newline, or tab characters.  - It cannot consist of only whitespace characters.  - It must be no longer than 64 characters.
+    /**
+     The text of the synonym. This string must conform to the following restrictions:
+     - It cannot contain carriage return, newline, or tab characters.
+     - It cannot consist of only whitespace characters.
+     - It must be no longer than 64 characters.
+     */
     public var synonym: String
+
+    // Map each property name to the key that shall be used for encoding/decoding.
+    private enum CodingKeys: String, CodingKey {
+        case synonym = "synonym"
+    }
 
     /**
      Initialize a `CreateSynonym` with member variables.
 
-     - parameter synonym: The text of the synonym. This string must conform to the following restrictions:  - It cannot contain carriage return, newline, or tab characters.  - It cannot consist of only whitespace characters.  - It must be no longer than 64 characters.
+     - parameter synonym: The text of the synonym. This string must conform to the following restrictions:
+       - It cannot contain carriage return, newline, or tab characters.
+       - It cannot consist of only whitespace characters.
+       - It must be no longer than 64 characters.
 
      - returns: An initialized `CreateSynonym`.
     */
-    public init(synonym: String) {
+    public init(
+        synonym: String
+    )
+    {
         self.synonym = synonym
-    }
-}
-
-extension CreateSynonym: Codable {
-
-    private enum CodingKeys: String, CodingKey {
-        case synonym = "synonym"
-        static let allValues = [synonym]
-    }
-
-    public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        synonym = try container.decode(String.self, forKey: .synonym)
-    }
-
-    public func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(synonym, forKey: .synonym)
     }
 
 }

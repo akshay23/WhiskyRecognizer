@@ -19,6 +19,7 @@
 import Foundation
 import CoreML
 import Vision
+import RestKit
 
 @available(iOS 11.0, macOS 10.13, tvOS 11.0, watchOS 4.0, *)
 extension VisualRecognition {
@@ -128,7 +129,7 @@ extension VisualRecognition {
     /**
      Classify an image using a Core ML model from the local filesystem.
 
-     - parameter image: The image to classify.
+     - parameter imageData: The image to classify.
      - parameter classifierIDs: A list of the classifier ids to use. "default" is the id of the
        built-in classifier.
      - parameter threshold: The minimum score a class must have to be displayed in the response.
@@ -136,21 +137,12 @@ extension VisualRecognition {
      - parameter success: A function executed with the image classifications.
      */
     public func classifyWithLocalModel(
-        image: UIImage,
+        imageData: Data,
         classifierIDs: [String] = ["default"],
         threshold: Double? = nil,
         failure: ((Error) -> Void)? = nil,
         success: @escaping (ClassifiedImages) -> Void)
     {
-        // convert UIImage to Data
-        guard let image = UIImagePNGRepresentation(image) else {
-            let description = "Failed to convert image from UIImage to Data."
-            let userInfo = [NSLocalizedDescriptionKey: description]
-            let error = NSError(domain: self.domain, code: 0, userInfo: userInfo)
-            failure?(error)
-            return
-        }
-
         // ensure a classifier id was provided
         guard !classifierIDs.isEmpty else {
             let description = "Please provide at least one classifierID."
@@ -222,7 +214,7 @@ extension VisualRecognition {
 
                 // execute classification request
                 do {
-                    let requestHandler = VNImageRequestHandler(data: image)
+                    let requestHandler = VNImageRequestHandler(data: imageData)
                     try requestHandler.perform([request])
                 } catch {
                     dispatchGroup.leave()
@@ -287,7 +279,21 @@ extension VisualRecognition {
      */
     private func loadModelFromDisk(classifierID: String) throws -> MLModel {
         let modelURL = try locateModelOnDisk(classifierID: classifierID)
+
+        // must build with Xcode 10 or later in order to use `MLModelConfiguration`.
+        // use the version of Swift to infer the Xcode version since this can’t be checked explicitly.
+        #if swift(>=4.1.50) || (swift(>=3.4) && !swift(>=4.0))
+        // temporary workaround for compatibility issue with new A12 based devices
+        if #available(iOS 12.0, *) {
+            let modelConfig = MLModelConfiguration()
+            modelConfig.computeUnits = .cpuAndGPU
+            return try MLModel(contentsOf: modelURL, configuration: modelConfig)
+        } else {
+            return try MLModel(contentsOf: modelURL)
+        }
+        #else
         return try MLModel(contentsOf: modelURL)
+        #endif
     }
 
     /// Convert results from Core ML classification requests into a `ClassifiedImages` model.
@@ -338,17 +344,22 @@ extension VisualRecognition {
         failure: ((Error) -> Void)? = nil,
         success: (() -> Void)? = nil)
     {
+        // construct header parameters
+        var headerParameters = defaultHeaders
+        headerParameters["Accept"] = "application/octet-stream"
+
         // construct query parameters
         var queryParameters = [URLQueryItem]()
         queryParameters.append(URLQueryItem(name: "version", value: version))
 
         // construct REST request
         let request = RestRequest(
+            session: session,
+            authMethod: authMethod,
+            errorResponseDecoder: errorResponseDecoder,
             method: "GET",
             url: serviceURL + "/v3/classifiers/\(classifierID)/core_ml_model",
-            credentials: credentials,
-            headerParameters: defaultHeaders,
-            acceptType: "application/octet-stream",
+            headerParameters: headerParameters,
             queryItems: queryParameters
         )
 
@@ -417,7 +428,7 @@ extension VisualRecognition {
             }
 
             // compile model from source
-            let compiledModelTemporaryURL: URL
+            var compiledModelTemporaryURL: URL
             do {
                 compiledModelTemporaryURL = try MLModel.compileModel(at: sourceModelURL)
             } catch {

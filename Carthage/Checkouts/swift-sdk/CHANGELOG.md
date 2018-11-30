@@ -1,5 +1,184 @@
+## [0.38.1](https://github.com/watson-developer-cloud/swift-sdk/compare/0.38.0...0.38.1) (2018-11-13)
+
+
+### Bug Fixes
+
+* **SpeechToTextV1:** Update recognizeMicrophone() to work with any authentication method ([5701ba6](https://github.com/watson-developer-cloud/swift-sdk/commit/5701ba6))
+
+# [0.38.0](https://github.com/watson-developer-cloud/swift-sdk/compare/0.37.0...0.38.0) (2018-11-12)
+
+
+### Bug Fixes
+
+* **VisualRecognitionV3:** temporary workaround for new A12 based devices ([62edd09](https://github.com/watson-developer-cloud/swift-sdk/commit/62edd09))
+* **VisualRecognitionV3:** temporary workaround to support A12 devices for Core ML inference ([fa212ec](https://github.com/watson-developer-cloud/swift-sdk/commit/fa212ec))
+
+
+### Features
+
+* **All:** Add support for Swift 4.2 ([4bbf42b](https://github.com/watson-developer-cloud/swift-sdk/commit/4bbf42b))
+
+# [0.37.0](https://github.com/watson-developer-cloud/swift-sdk/compare/0.36.0...0.37.0) (2018-11-02)
+
+
+### Features
+
+* **AssistantV1, AssistantV2:** Add cloudFunction and webAction to DialogNodeAction.ActionType ([16d3fc9](https://github.com/watson-developer-cloud/swift-sdk/commit/16d3fc9))
+* **DiscoveryV1:** Tokenization dictionaries for collections ([d274371](https://github.com/watson-developer-cloud/swift-sdk/commit/d274371))
+* **SpeechToTextV1:** Add languageCustomizationID parameter to createJob() and recognize() ([0137964](https://github.com/watson-developer-cloud/swift-sdk/commit/0137964))
+
+# [0.36.0](https://github.com/watson-developer-cloud/swift-sdk/compare/0.35.0...0.36.0) (2018-10-19)
+
+
+### Bug Fixes
+
+* **Visual Recognition:** Fix deserialization error in getCoreMlModel ([9392b23](https://github.com/watson-developer-cloud/swift-sdk/commit/9392b23))
+* Conversion of file data to multipart form data ([1d46baf](https://github.com/watson-developer-cloud/swift-sdk/commit/1d46baf))
+
+
+### Features
+
+* **Discovery:** Add "LT" option to environment sizes ([f92fcde](https://github.com/watson-developer-cloud/swift-sdk/commit/f92fcde))
+* **Discovery:** Add `size` parameter to updateEnvironment method ([725e1d5](https://github.com/watson-developer-cloud/swift-sdk/commit/725e1d5))
+* **Discovery:** Add bias and loggingOptOut parameters to query methods ([8782fc6](https://github.com/watson-developer-cloud/swift-sdk/commit/8782fc6))
+* **Discovery:** Add requestedSize and searchStatus properties to Environment model ([14cdb02](https://github.com/watson-developer-cloud/swift-sdk/commit/14cdb02))
+* **ToneAnalyzer:** Add `ToneID` options to `ToneChatScore` ([ac75c92](https://github.com/watson-developer-cloud/swift-sdk/commit/ac75c92))
+
+
+### Reverts
+
+* **AssistantV1:** Revert erroneous addition of `actions` property to `OutputData` ([28efe1e](https://github.com/watson-developer-cloud/swift-sdk/commit/28efe1e))
+* **Linux:** Remove 30 minute wait from Linux tests ([1b4d734](https://github.com/watson-developer-cloud/swift-sdk/commit/1b4d734))
+
 Change Log
 ==========
+
+## Version 0.35.0
+_2018-09-25_
+
+This release adds the new AssistantV2 service.
+
+## Version 0.34.0
+_2018-09-14_
+
+This release regenerates all services with documentation updates, adds support for IBM Cloud Private authentication, and adds a couple of new properties to Speech to Text and Assistant/Conversation.
+
+This release includes the following new features:
+
+- All services: Adds support for authentication with IBM Cloud Private (ICP) API keys. Use the `init(username:password:)` initializer, passing `apikey` for the `username` parameter and the API key for the `password`.
+- Speech to Text: Adds the language models `de-DE_BroadbandModel`, `pt-BR_BroadbandModel`, and `pt-BR_NarrowbandModel`
+- Assistant/Conversation: Add the `actions` property to `MessageResponse` and `OutputData`
+
+## Version 0.33.1
+
+Internal bug fix regarding RestKit.framework. This should have no impact on users.
+
+## Version 0.33.0
+_2018-08-31_
+
+### First release that supports Cocoapods!
+
+This release adds support for installing each service in the Swift SDK via Cocoapods. It also adds new options to the Speech to Text `recognize` API, and includes documentation improvements.
+
+- Support for Cocoapods!
+- Speech to Text: Adds the `acousticCustomizationID` and `headers` parameters to the `recognize()` method
+- Speech to Text: Adds the `customizationWeight` property to `RecognitionSettings`
+- Documentation: Split README into multiple READMEs: one main README plus one README for each service
+- Documentation: Improved [Jazzy docs](http://watson-developer-cloud.github.io/swift-sdk/)
+
+## Version 0.32.0
+_2018-08-16_
+
+This release regenerates all services with documentation updates, and adds some new methods to Discovery.
+
+This release includes the following new features:
+
+- Discovery: Add ability to create new `Events` to create log entries associated with specific queries
+- Discovery: Add new methods to obtain metrics and metadata on past queries
+- Discovery: Changes the type of the `size` parameter in the `createEnvironment` method from `Int` to `String`.
+
+## Version 0.31.0
+_2018-07-31_
+
+This release regenerates all services with documentation updates and minor generator improvements.
+
+This release includes the following new features and bug fixes:
+
+- Assistant: Add support for entity mentions and disambiguation
+- Renames STT Websocket method to `recognizeUsingWebSocket`.  The prior name is deprecated but retained for backward compatibility.
+- Fix Xcode 10 build error
+
+## Version 0.30.0
+_2018-07-16_
+
+This release regenerates all services with documentation updates and minor generator improvements.
+
+This release includes the following new features and bug fixes:
+
+- Discovery: Add support for credentials and configuration source options
+- Add support for websocket features for services using IAM authentication
+- Handle malformed URLs when constructing URL requests
+- Remove version param from IAM init methods for LTv2, NLC, STT, TTS
+
+## Version 0.29.0
+_2018-06-29_
+
+This release regenerates all services with generator updates for error handling and multi-consumes operations.
+
+The release also adds a deprecation notice for the Language Translator v2 service.  Users are encouraged to migrate
+to the new Language Translator v3 service.
+
+This release should be fully compatible with the previous SDK release.
+
+## Version 0.28.1
+_2018-06-21_
+
+This release regenerates just the NLC service to add support for IAM authentication.
+
+## Version 0.28.0
+_2018-06-12_
+
+This release regenerates all services. It includes updates to the documentation and some minor new service features.
+
+This release includes the following new features and bug fixes:
+
+- Adds support for the new Language Translator V3 service and deprecates Language Translator V2
+- Fix for issue 833
+
+## Version 0.27.0
+_2018-05-28_
+
+This release regenerates all services. It includes updates to the documentation and some minor new service features.
+
+This release includes the following new features and bug fixes:
+
+- Adds support for IAM authentication, using either an IAM API Key or an access_token obtained using the service API Key
+
+## Version 0.26.0
+_2018-05-17_
+
+This release regenerates all services. It includes updates to the documentation and some minor new service features.
+
+This release includes the following new features and bug fixes:
+
+- Adds a `headers`  parameter to all service methods that can be used to pass request headers to be sent with the request.
+- Adds a `deleteUserData` method in some services to allow deletion of data associated with a specified `customer_id`.
+
+## Version 0.25.0
+_2018-04-26_
+
+This release regenerates all services except for Visual Recognition. It includes considerable updates to the function documentation and model serialization/deserialization, although they should not be breaking changes for users.
+
+This release also includes the following new features and bug fixes:
+
+- Discovery: Adds support for document segmentation
+- Natural Language Classifier: Adds support for `classifyCollection`
+- Speech to Text: Adds acoustic model customization
+- Speech to Text: Adds enums for `BaseModelName`
+- Tone Analyzer: Fixes a bug with the `tones` list for the `tone` function
+- Tone Analyzer: Adds `contentLanguage` parameter to `toneChat`
+- Tone Analyzer: Adds plain-text and HTML variants of the `tone` function
+- Tone Analyzer: Removes unused `content-type` parameter from the JSON variant of the `tone` function
 
 ## Version 0.24.1
 _2018-04-21_

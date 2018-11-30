@@ -16,39 +16,19 @@
 
 import Foundation
 
-/** List of available classifiers. */
-public struct ClassifierList {
-
-    /// The classifiers available to the user. Returns an empty array if no classifiers are available.
-    public var classifiers: [Classifier]
+/**
+ List of available classifiers.
+ */
+public struct ClassifierList: Decodable {
 
     /**
-     Initialize a `ClassifierList` with member variables.
+     The classifiers available to the user. Returns an empty array if no classifiers are available.
+     */
+    public var classifiers: [Classifier]
 
-     - parameter classifiers: The classifiers available to the user. Returns an empty array if no classifiers are available.
-
-     - returns: An initialized `ClassifierList`.
-    */
-    public init(classifiers: [Classifier]) {
-        self.classifiers = classifiers
-    }
-}
-
-extension ClassifierList: Codable {
-
+    // Map each property name to the key that shall be used for encoding/decoding.
     private enum CodingKeys: String, CodingKey {
         case classifiers = "classifiers"
-        static let allValues = [classifiers]
-    }
-
-    public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        classifiers = try container.decode([Classifier].self, forKey: .classifiers)
-    }
-
-    public func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(classifiers, forKey: .classifiers)
     }
 
 }

@@ -16,13 +16,19 @@
 
 import Foundation
 
-/** A text string that appears within the entity text field. */
+/**
+ A text string that appears within the entity text field.
+ */
 public struct QueryEntitiesEntity: Codable {
 
-    /// Entity text content.
+    /**
+     Entity text content.
+     */
     public var text: String?
 
-    /// The type of the specified entity.
+    /**
+     The type of the specified entity.
+     */
     public var type: String?
 
     // Map each property name to the key that shall be used for encoding/decoding.
@@ -39,7 +45,11 @@ public struct QueryEntitiesEntity: Codable {
 
      - returns: An initialized `QueryEntitiesEntity`.
     */
-    public init(text: String? = nil, type: String? = nil) {
+    public init(
+        text: String? = nil,
+        type: String? = nil
+    )
+    {
         self.text = text
         self.type = type
     }

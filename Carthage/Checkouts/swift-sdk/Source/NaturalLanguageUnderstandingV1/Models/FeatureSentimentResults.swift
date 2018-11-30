@@ -17,38 +17,16 @@
 import Foundation
 
 /** FeatureSentimentResults. */
-public struct FeatureSentimentResults {
-
-    /// Sentiment score from -1 (negative) to 1 (positive).
-    public var score: Double?
+public struct FeatureSentimentResults: Decodable {
 
     /**
-     Initialize a `FeatureSentimentResults` with member variables.
+     Sentiment score from -1 (negative) to 1 (positive).
+     */
+    public var score: Double?
 
-     - parameter score: Sentiment score from -1 (negative) to 1 (positive).
-
-     - returns: An initialized `FeatureSentimentResults`.
-    */
-    public init(score: Double? = nil) {
-        self.score = score
-    }
-}
-
-extension FeatureSentimentResults: Codable {
-
+    // Map each property name to the key that shall be used for encoding/decoding.
     private enum CodingKeys: String, CodingKey {
         case score = "score"
-        static let allValues = [score]
-    }
-
-    public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        score = try container.decodeIfPresent(Double.self, forKey: .score)
-    }
-
-    public func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encodeIfPresent(score, forKey: .score)
     }
 
 }

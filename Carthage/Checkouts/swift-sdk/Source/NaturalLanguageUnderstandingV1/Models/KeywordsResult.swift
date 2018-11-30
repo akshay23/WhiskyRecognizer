@@ -16,63 +16,37 @@
 
 import Foundation
 
-/** The most important keywords in the content, organized by relevance. */
-public struct KeywordsResult {
-
-    /// Relevance score from 0 to 1. Higher values indicate greater relevance.
-    public var relevance: Double?
-
-    /// The keyword text.
-    public var text: String?
-
-    /// Emotion analysis results for the keyword, enabled with the "emotion" option.
-    public var emotion: EmotionScores?
-
-    /// Sentiment analysis results for the keyword, enabled with the "sentiment" option.
-    public var sentiment: FeatureSentimentResults?
+/**
+ The most important keywords in the content, organized by relevance.
+ */
+public struct KeywordsResult: Decodable {
 
     /**
-     Initialize a `KeywordsResult` with member variables.
+     Relevance score from 0 to 1. Higher values indicate greater relevance.
+     */
+    public var relevance: Double?
 
-     - parameter relevance: Relevance score from 0 to 1. Higher values indicate greater relevance.
-     - parameter text: The keyword text.
-     - parameter emotion: Emotion analysis results for the keyword, enabled with the "emotion" option.
-     - parameter sentiment: Sentiment analysis results for the keyword, enabled with the "sentiment" option.
+    /**
+     The keyword text.
+     */
+    public var text: String?
 
-     - returns: An initialized `KeywordsResult`.
-    */
-    public init(relevance: Double? = nil, text: String? = nil, emotion: EmotionScores? = nil, sentiment: FeatureSentimentResults? = nil) {
-        self.relevance = relevance
-        self.text = text
-        self.emotion = emotion
-        self.sentiment = sentiment
-    }
-}
+    /**
+     Emotion analysis results for the keyword, enabled with the "emotion" option.
+     */
+    public var emotion: EmotionScores?
 
-extension KeywordsResult: Codable {
+    /**
+     Sentiment analysis results for the keyword, enabled with the "sentiment" option.
+     */
+    public var sentiment: FeatureSentimentResults?
 
+    // Map each property name to the key that shall be used for encoding/decoding.
     private enum CodingKeys: String, CodingKey {
         case relevance = "relevance"
         case text = "text"
         case emotion = "emotion"
         case sentiment = "sentiment"
-        static let allValues = [relevance, text, emotion, sentiment]
-    }
-
-    public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        relevance = try container.decodeIfPresent(Double.self, forKey: .relevance)
-        text = try container.decodeIfPresent(String.self, forKey: .text)
-        emotion = try container.decodeIfPresent(EmotionScores.self, forKey: .emotion)
-        sentiment = try container.decodeIfPresent(FeatureSentimentResults.self, forKey: .sentiment)
-    }
-
-    public func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encodeIfPresent(relevance, forKey: .relevance)
-        try container.encodeIfPresent(text, forKey: .text)
-        try container.encodeIfPresent(emotion, forKey: .emotion)
-        try container.encodeIfPresent(sentiment, forKey: .sentiment)
     }
 
 }

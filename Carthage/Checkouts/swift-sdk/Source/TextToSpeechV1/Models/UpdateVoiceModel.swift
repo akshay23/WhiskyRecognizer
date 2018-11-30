@@ -17,54 +17,50 @@
 import Foundation
 
 /** UpdateVoiceModel. */
-public struct UpdateVoiceModel {
+internal struct UpdateVoiceModel: Encodable {
 
-    /// A new name for the custom voice model.
+    /**
+     A new name for the custom voice model.
+     */
     public var name: String?
 
-    /// A new description for the custom voice model.
+    /**
+     A new description for the custom voice model.
+     */
     public var description: String?
 
-    /// An array of words and their translations that are to be added or updated for the custom voice model. Pass an empty array to make no additions or updates.
+    /**
+     An array of `Word` objects that provides the words and their translations that are to be added or updated for the
+     custom voice model. Pass an empty array to make no additions or updates.
+     */
     public var words: [Word]?
+
+    // Map each property name to the key that shall be used for encoding/decoding.
+    private enum CodingKeys: String, CodingKey {
+        case name = "name"
+        case description = "description"
+        case words = "words"
+    }
 
     /**
      Initialize a `UpdateVoiceModel` with member variables.
 
      - parameter name: A new name for the custom voice model.
      - parameter description: A new description for the custom voice model.
-     - parameter words: An array of words and their translations that are to be added or updated for the custom voice model. Pass an empty array to make no additions or updates.
+     - parameter words: An array of `Word` objects that provides the words and their translations that are to be
+       added or updated for the custom voice model. Pass an empty array to make no additions or updates.
 
      - returns: An initialized `UpdateVoiceModel`.
     */
-    public init(name: String? = nil, description: String? = nil, words: [Word]? = nil) {
+    public init(
+        name: String? = nil,
+        description: String? = nil,
+        words: [Word]? = nil
+    )
+    {
         self.name = name
         self.description = description
         self.words = words
-    }
-}
-
-extension UpdateVoiceModel: Codable {
-
-    private enum CodingKeys: String, CodingKey {
-        case name = "name"
-        case description = "description"
-        case words = "words"
-        static let allValues = [name, description, words]
-    }
-
-    public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        name = try container.decodeIfPresent(String.self, forKey: .name)
-        description = try container.decodeIfPresent(String.self, forKey: .description)
-        words = try container.decodeIfPresent([Word].self, forKey: .words)
-    }
-
-    public func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encodeIfPresent(name, forKey: .name)
-        try container.encodeIfPresent(description, forKey: .description)
-        try container.encodeIfPresent(words, forKey: .words)
     }
 
 }

@@ -16,71 +16,43 @@
 
 import Foundation
 
-/** Response from the classifier for a phrase. */
-public struct Classification {
-
-    /// Unique identifier for this classifier.
-    public var classifierID: String?
-
-    /// Link to the classifier.
-    public var url: String?
-
-    /// The submitted phrase.
-    public var text: String?
-
-    /// The class with the highest confidence.
-    public var topClass: String?
-
-    /// An array of up to ten class-confidence pairs sorted in descending order of confidence.
-    public var classes: [ClassifiedClass]?
+/**
+ Response from the classifier for a phrase.
+ */
+public struct Classification: Decodable {
 
     /**
-     Initialize a `Classification` with member variables.
+     Unique identifier for this classifier.
+     */
+    public var classifierID: String?
 
-     - parameter classifierID: Unique identifier for this classifier.
-     - parameter url: Link to the classifier.
-     - parameter text: The submitted phrase.
-     - parameter topClass: The class with the highest confidence.
-     - parameter classes: An array of up to ten class-confidence pairs sorted in descending order of confidence.
+    /**
+     Link to the classifier.
+     */
+    public var url: String?
 
-     - returns: An initialized `Classification`.
-    */
-    public init(classifierID: String? = nil, url: String? = nil, text: String? = nil, topClass: String? = nil, classes: [ClassifiedClass]? = nil) {
-        self.classifierID = classifierID
-        self.url = url
-        self.text = text
-        self.topClass = topClass
-        self.classes = classes
-    }
-}
+    /**
+     The submitted phrase.
+     */
+    public var text: String?
 
-extension Classification: Codable {
+    /**
+     The class with the highest confidence.
+     */
+    public var topClass: String?
 
+    /**
+     An array of up to ten class-confidence pairs sorted in descending order of confidence.
+     */
+    public var classes: [ClassifiedClass]?
+
+    // Map each property name to the key that shall be used for encoding/decoding.
     private enum CodingKeys: String, CodingKey {
         case classifierID = "classifier_id"
         case url = "url"
         case text = "text"
         case topClass = "top_class"
         case classes = "classes"
-        static let allValues = [classifierID, url, text, topClass, classes]
-    }
-
-    public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        classifierID = try container.decodeIfPresent(String.self, forKey: .classifierID)
-        url = try container.decodeIfPresent(String.self, forKey: .url)
-        text = try container.decodeIfPresent(String.self, forKey: .text)
-        topClass = try container.decodeIfPresent(String.self, forKey: .topClass)
-        classes = try container.decodeIfPresent([ClassifiedClass].self, forKey: .classes)
-    }
-
-    public func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encodeIfPresent(classifierID, forKey: .classifierID)
-        try container.encodeIfPresent(url, forKey: .url)
-        try container.encodeIfPresent(text, forKey: .text)
-        try container.encodeIfPresent(topClass, forKey: .topClass)
-        try container.encodeIfPresent(classes, forKey: .classes)
     }
 
 }

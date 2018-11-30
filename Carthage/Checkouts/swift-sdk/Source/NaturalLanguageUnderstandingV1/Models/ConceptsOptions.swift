@@ -16,11 +16,22 @@
 
 import Foundation
 
-/** Whether or not to analyze content for general concepts that are referenced or alluded to. */
-public struct ConceptsOptions {
+/**
+ Returns high-level concepts in the content. For example, a research paper about deep learning might return the concept,
+ "Artificial Intelligence" although the term is not mentioned.
+ Supported languages: English, French, German, Japanese, Korean, Portuguese, Spanish.
+ */
+public struct ConceptsOptions: Encodable {
 
-    /// Maximum number of concepts to return.
+    /**
+     Maximum number of concepts to return.
+     */
     public var limit: Int?
+
+    // Map each property name to the key that shall be used for encoding/decoding.
+    private enum CodingKeys: String, CodingKey {
+        case limit = "limit"
+    }
 
     /**
      Initialize a `ConceptsOptions` with member variables.
@@ -29,26 +40,11 @@ public struct ConceptsOptions {
 
      - returns: An initialized `ConceptsOptions`.
     */
-    public init(limit: Int? = nil) {
+    public init(
+        limit: Int? = nil
+    )
+    {
         self.limit = limit
-    }
-}
-
-extension ConceptsOptions: Codable {
-
-    private enum CodingKeys: String, CodingKey {
-        case limit = "limit"
-        static let allValues = [limit]
-    }
-
-    public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        limit = try container.decodeIfPresent(Int.self, forKey: .limit)
-    }
-
-    public func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encodeIfPresent(limit, forKey: .limit)
     }
 
 }

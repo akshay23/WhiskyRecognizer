@@ -17,54 +17,54 @@
 import Foundation
 
 /** UpdateIntent. */
-public struct UpdateIntent {
+internal struct UpdateIntent: Encodable {
 
-    /// The name of the intent. This string must conform to the following restrictions:  - It can contain only Unicode alphanumeric, underscore, hyphen, and dot characters.  - It cannot begin with the reserved prefix `sys-`.  - It must be no longer than 128 characters.
+    /**
+     The name of the intent. This string must conform to the following restrictions:
+     - It can contain only Unicode alphanumeric, underscore, hyphen, and dot characters.
+     - It cannot begin with the reserved prefix `sys-`.
+     - It must be no longer than 128 characters.
+     */
     public var intent: String?
 
-    /// The description of the intent.
+    /**
+     The description of the intent.
+     */
     public var description: String?
 
-    /// An array of user input examples for the intent.
+    /**
+     An array of user input examples for the intent.
+     */
     public var examples: [CreateExample]?
+
+    // Map each property name to the key that shall be used for encoding/decoding.
+    private enum CodingKeys: String, CodingKey {
+        case intent = "intent"
+        case description = "description"
+        case examples = "examples"
+    }
 
     /**
      Initialize a `UpdateIntent` with member variables.
 
-     - parameter intent: The name of the intent. This string must conform to the following restrictions:  - It can contain only Unicode alphanumeric, underscore, hyphen, and dot characters.  - It cannot begin with the reserved prefix `sys-`.  - It must be no longer than 128 characters.
+     - parameter intent: The name of the intent. This string must conform to the following restrictions:
+       - It can contain only Unicode alphanumeric, underscore, hyphen, and dot characters.
+       - It cannot begin with the reserved prefix `sys-`.
+       - It must be no longer than 128 characters.
      - parameter description: The description of the intent.
      - parameter examples: An array of user input examples for the intent.
 
      - returns: An initialized `UpdateIntent`.
     */
-    public init(intent: String? = nil, description: String? = nil, examples: [CreateExample]? = nil) {
+    public init(
+        intent: String? = nil,
+        description: String? = nil,
+        examples: [CreateExample]? = nil
+    )
+    {
         self.intent = intent
         self.description = description
         self.examples = examples
-    }
-}
-
-extension UpdateIntent: Codable {
-
-    private enum CodingKeys: String, CodingKey {
-        case intent = "intent"
-        case description = "description"
-        case examples = "examples"
-        static let allValues = [intent, description, examples]
-    }
-
-    public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        intent = try container.decodeIfPresent(String.self, forKey: .intent)
-        description = try container.decodeIfPresent(String.self, forKey: .description)
-        examples = try container.decodeIfPresent([CreateExample].self, forKey: .examples)
-    }
-
-    public func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encodeIfPresent(intent, forKey: .intent)
-        try container.encodeIfPresent(description, forKey: .description)
-        try container.encodeIfPresent(examples, forKey: .examples)
     }
 
 }

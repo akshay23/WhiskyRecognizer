@@ -17,52 +17,28 @@
 import Foundation
 
 /** SemanticRolesSubject. */
-public struct SemanticRolesSubject {
-
-    /// Text that corresponds to the subject role.
-    public var text: String?
-
-    public var entities: [SemanticRolesEntity]?
-
-    public var keywords: [SemanticRolesKeyword]?
+public struct SemanticRolesSubject: Decodable {
 
     /**
-     Initialize a `SemanticRolesSubject` with member variables.
+     Text that corresponds to the subject role.
+     */
+    public var text: String?
 
-     - parameter text: Text that corresponds to the subject role.
-     - parameter entities:
-     - parameter keywords:
+    /**
+     An array of extracted entities.
+     */
+    public var entities: [SemanticRolesEntity]?
 
-     - returns: An initialized `SemanticRolesSubject`.
-    */
-    public init(text: String? = nil, entities: [SemanticRolesEntity]? = nil, keywords: [SemanticRolesKeyword]? = nil) {
-        self.text = text
-        self.entities = entities
-        self.keywords = keywords
-    }
-}
+    /**
+     An array of extracted keywords.
+     */
+    public var keywords: [SemanticRolesKeyword]?
 
-extension SemanticRolesSubject: Codable {
-
+    // Map each property name to the key that shall be used for encoding/decoding.
     private enum CodingKeys: String, CodingKey {
         case text = "text"
         case entities = "entities"
         case keywords = "keywords"
-        static let allValues = [text, entities, keywords]
-    }
-
-    public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        text = try container.decodeIfPresent(String.self, forKey: .text)
-        entities = try container.decodeIfPresent([SemanticRolesEntity].self, forKey: .entities)
-        keywords = try container.decodeIfPresent([SemanticRolesKeyword].self, forKey: .keywords)
-    }
-
-    public func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encodeIfPresent(text, forKey: .text)
-        try container.encodeIfPresent(entities, forKey: .entities)
-        try container.encodeIfPresent(keywords, forKey: .keywords)
     }
 
 }

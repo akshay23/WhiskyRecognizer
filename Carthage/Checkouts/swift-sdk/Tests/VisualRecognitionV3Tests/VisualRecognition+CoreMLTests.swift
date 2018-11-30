@@ -14,7 +14,7 @@
  * limitations under the License.
  **/
 
-// swiftlint:disable function_body_length force_try force_unwrapping superfluous_disable_command
+// swiftlint:disable function_body_length force_try force_unwrapping file_length
 
 #if os(iOS) || os(macOS) || os(tvOS) || os(watchOS)
 
@@ -25,7 +25,7 @@ class VisualRecognitionCoreMLTests: XCTestCase {
 
     private var visualRecognition: VisualRecognition!
     private let timeout: TimeInterval = 30.0
-    private let classifierID = "demo"
+    private let classifierID = WatsonCredentials.VisualRecognitionClassifierID
 
     /** Set up for each test by instantiating the service. */
     override func setUp() {
@@ -36,9 +36,11 @@ class VisualRecognitionCoreMLTests: XCTestCase {
 
     /** Instantiate Visual Recognition */
     func instantiateVisualRecognition() {
-        let apiKey = Credentials.VisualRecognitionAPIKey
-        let version = "2016-11-04"
-        visualRecognition = VisualRecognition(apiKey: apiKey, version: version)
+        let version = "2018-11-01"
+        visualRecognition = VisualRecognition(version: version, apiKey: WatsonCredentials.VisualRecognitionAPIKey)
+        if let url = WatsonCredentials.VisualRecognitionURL {
+            visualRecognition.serviceURL = url
+        }
         visualRecognition.defaultHeaders["X-Watson-Learning-Opt-Out"] = "true"
         visualRecognition.defaultHeaders["X-Watson-Test"] = "true"
     }
@@ -104,8 +106,8 @@ class VisualRecognitionCoreMLTests: XCTestCase {
         }
     }
 
-    func testClassifyWithLocalModel() {
-        if #available(iOS 11.0, *) {
+    func testClassifyWithLocalModel() throws {
+        if #available(iOS 11.0, macOS 10.13, tvOS 11.0, watchOS 4.0, *) {
 
             // update the local model
             let expectation1 = self.expectation(description: "updateLocalModel")
@@ -114,10 +116,14 @@ class VisualRecognitionCoreMLTests: XCTestCase {
             }
             waitForExpectations()
 
+            // convert imageFile to Data
+            let bundle = Bundle(for: type(of: self))
+            let imageFile = bundle.url(forResource: "car", withExtension: "png")!
+            let imageData = try Data(contentsOf: imageFile)
+
             // classify using the local model
             let expectation2 = self.expectation(description: "classifyWithLocalModel")
-            let image = UIImage(named: "car", in: Bundle(for: type(of: self)), compatibleWith: nil)!
-            visualRecognition.classifyWithLocalModel(image: image, classifierIDs: [classifierID], threshold: 0.1, failure: failWithError) {
+            visualRecognition.classifyWithLocalModel(imageData: imageData, classifierIDs: [classifierID], threshold: 0.1, failure: failWithError) {
                 classifiedImages in
                 print(classifiedImages)
                 expectation2.fulfill()

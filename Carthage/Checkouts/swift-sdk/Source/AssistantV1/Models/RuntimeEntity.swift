@@ -15,56 +15,48 @@
  **/
 
 import Foundation
+import RestKit
 
-/** A term from the request that was identified as an entity. */
-public struct RuntimeEntity {
+/**
+ A term from the request that was identified as an entity.
+ */
+public struct RuntimeEntity: Codable {
 
-    /// An entity detected in the input.
+    /**
+     An entity detected in the input.
+     */
     public var entity: String
 
-    /// An array of zero-based character offsets that indicate where the detected entity values begin and end in the input text.
+    /**
+     An array of zero-based character offsets that indicate where the detected entity values begin and end in the input
+     text.
+     */
     public var location: [Int]
 
-    /// The term in the input text that was recognized as an entity value.
+    /**
+     The term in the input text that was recognized as an entity value.
+     */
     public var value: String
 
-    /// A decimal percentage that represents Watson's confidence in the entity.
+    /**
+     A decimal percentage that represents Watson's confidence in the entity.
+     */
     public var confidence: Double?
 
-    /// Any metadata for the entity.
+    /**
+     Any metadata for the entity.
+     */
     public var metadata: [String: JSON]?
 
-    /// The recognized capture groups for the entity, as defined by the entity pattern.
+    /**
+     The recognized capture groups for the entity, as defined by the entity pattern.
+     */
     public var groups: [CaptureGroup]?
 
     /// Additional properties associated with this model.
     public var additionalProperties: [String: JSON]
 
-    /**
-     Initialize a `RuntimeEntity` with member variables.
-
-     - parameter entity: An entity detected in the input.
-     - parameter location: An array of zero-based character offsets that indicate where the detected entity values begin and end in the input text.
-     - parameter value: The term in the input text that was recognized as an entity value.
-     - parameter confidence: A decimal percentage that represents Watson's confidence in the entity.
-     - parameter metadata: Any metadata for the entity.
-     - parameter groups: The recognized capture groups for the entity, as defined by the entity pattern.
-
-     - returns: An initialized `RuntimeEntity`.
-    */
-    public init(entity: String, location: [Int], value: String, confidence: Double? = nil, metadata: [String: JSON]? = nil, groups: [CaptureGroup]? = nil, additionalProperties: [String: JSON] = [:]) {
-        self.entity = entity
-        self.location = location
-        self.value = value
-        self.confidence = confidence
-        self.metadata = metadata
-        self.groups = groups
-        self.additionalProperties = additionalProperties
-    }
-}
-
-extension RuntimeEntity: Codable {
-
+    // Map each property name to the key that shall be used for encoding/decoding.
     private enum CodingKeys: String, CodingKey {
         case entity = "entity"
         case location = "location"
@@ -73,6 +65,38 @@ extension RuntimeEntity: Codable {
         case metadata = "metadata"
         case groups = "groups"
         static let allValues = [entity, location, value, confidence, metadata, groups]
+    }
+
+    /**
+     Initialize a `RuntimeEntity` with member variables.
+
+     - parameter entity: An entity detected in the input.
+     - parameter location: An array of zero-based character offsets that indicate where the detected entity values
+       begin and end in the input text.
+     - parameter value: The term in the input text that was recognized as an entity value.
+     - parameter confidence: A decimal percentage that represents Watson's confidence in the entity.
+     - parameter metadata: Any metadata for the entity.
+     - parameter groups: The recognized capture groups for the entity, as defined by the entity pattern.
+
+     - returns: An initialized `RuntimeEntity`.
+    */
+    public init(
+        entity: String,
+        location: [Int],
+        value: String,
+        confidence: Double? = nil,
+        metadata: [String: JSON]? = nil,
+        groups: [CaptureGroup]? = nil,
+        additionalProperties: [String: JSON] = [:]
+    )
+    {
+        self.entity = entity
+        self.location = location
+        self.value = value
+        self.confidence = confidence
+        self.metadata = metadata
+        self.groups = groups
+        self.additionalProperties = additionalProperties
     }
 
     public init(from decoder: Decoder) throws {

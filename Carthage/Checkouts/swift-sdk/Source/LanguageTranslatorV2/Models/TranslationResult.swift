@@ -17,54 +17,28 @@
 import Foundation
 
 /** TranslationResult. */
-public struct TranslationResult {
-
-    /// Number of words of the complete input text.
-    public var wordCount: Int
-
-    /// Number of characters of the complete input text.
-    public var characterCount: Int
-
-    /// List of translation output in UTF-8, corresponding to the list of input text.
-    public var translations: [Translation]
+public struct TranslationResult: Decodable {
 
     /**
-     Initialize a `TranslationResult` with member variables.
+     Number of words in the input text.
+     */
+    public var wordCount: Int
 
-     - parameter wordCount: Number of words of the complete input text.
-     - parameter characterCount: Number of characters of the complete input text.
-     - parameter translations: List of translation output in UTF-8, corresponding to the list of input text.
+    /**
+     Number of characters in the input text.
+     */
+    public var characterCount: Int
 
-     - returns: An initialized `TranslationResult`.
-    */
-    public init(wordCount: Int, characterCount: Int, translations: [Translation]) {
-        self.wordCount = wordCount
-        self.characterCount = characterCount
-        self.translations = translations
-    }
-}
+    /**
+     List of translation output in UTF-8, corresponding to the input text entries.
+     */
+    public var translations: [Translation]
 
-extension TranslationResult: Codable {
-
+    // Map each property name to the key that shall be used for encoding/decoding.
     private enum CodingKeys: String, CodingKey {
         case wordCount = "word_count"
         case characterCount = "character_count"
         case translations = "translations"
-        static let allValues = [wordCount, characterCount, translations]
-    }
-
-    public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        wordCount = try container.decode(Int.self, forKey: .wordCount)
-        characterCount = try container.decode(Int.self, forKey: .characterCount)
-        translations = try container.decode([Translation].self, forKey: .translations)
-    }
-
-    public func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(wordCount, forKey: .wordCount)
-        try container.encode(characterCount, forKey: .characterCount)
-        try container.encode(translations, forKey: .translations)
     }
 
 }

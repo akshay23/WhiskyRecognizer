@@ -19,14 +19,38 @@ import Foundation
 /** CreateEnvironmentRequest. */
 internal struct CreateEnvironmentRequest: Encodable {
 
-    /// Name that identifies the environment.
+    /**
+     Size of the environment. In the Lite plan the default and only accepted value is `LT`, in all other plans the
+     default is `S`.
+     */
+    public enum Size: String {
+        case lt = "LT"
+        case xs = "XS"
+        case s = "S"
+        case ms = "MS"
+        case m = "M"
+        case ml = "ML"
+        case l = "L"
+        case xl = "XL"
+        case xxl = "XXL"
+        case xxxl = "XXXL"
+    }
+
+    /**
+     Name that identifies the environment.
+     */
     public var name: String
 
-    /// Description of the environment.
+    /**
+     Description of the environment.
+     */
     public var description: String?
 
-    /// **Deprecated**: Size of the environment.
-    public var size: Int?
+    /**
+     Size of the environment. In the Lite plan the default and only accepted value is `LT`, in all other plans the
+     default is `S`.
+     */
+    public var size: String?
 
     // Map each property name to the key that shall be used for encoding/decoding.
     private enum CodingKeys: String, CodingKey {
@@ -40,11 +64,17 @@ internal struct CreateEnvironmentRequest: Encodable {
 
      - parameter name: Name that identifies the environment.
      - parameter description: Description of the environment.
-     - parameter size: **Deprecated**: Size of the environment.
+     - parameter size: Size of the environment. In the Lite plan the default and only accepted value is `LT`, in all
+       other plans the default is `S`.
 
      - returns: An initialized `CreateEnvironmentRequest`.
     */
-    public init(name: String, description: String? = nil, size: Int? = nil) {
+    public init(
+        name: String,
+        description: String? = nil,
+        size: String? = nil
+    )
+    {
         self.name = name
         self.description = description
         self.size = size

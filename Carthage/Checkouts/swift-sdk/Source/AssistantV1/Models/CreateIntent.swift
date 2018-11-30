@@ -17,54 +17,56 @@
 import Foundation
 
 /** CreateIntent. */
-public struct CreateIntent {
-
-    /// The name of the intent. This string must conform to the following restrictions:  - It can contain only Unicode alphanumeric, underscore, hyphen, and dot characters.  - It cannot begin with the reserved prefix `sys-`.  - It must be no longer than 128 characters.
-    public var intent: String
-
-    /// The description of the intent. This string cannot contain carriage return, newline, or tab characters, and it must be no longer than 128 characters.
-    public var description: String?
-
-    /// An array of user input examples for the intent.
-    public var examples: [CreateExample]?
+public struct CreateIntent: Encodable {
 
     /**
-     Initialize a `CreateIntent` with member variables.
+     The name of the intent. This string must conform to the following restrictions:
+     - It can contain only Unicode alphanumeric, underscore, hyphen, and dot characters.
+     - It cannot begin with the reserved prefix `sys-`.
+     - It must be no longer than 128 characters.
+     */
+    public var intent: String
 
-     - parameter intent: The name of the intent. This string must conform to the following restrictions:  - It can contain only Unicode alphanumeric, underscore, hyphen, and dot characters.  - It cannot begin with the reserved prefix `sys-`.  - It must be no longer than 128 characters.
-     - parameter description: The description of the intent. This string cannot contain carriage return, newline, or tab characters, and it must be no longer than 128 characters.
-     - parameter examples: An array of user input examples for the intent.
+    /**
+     The description of the intent. This string cannot contain carriage return, newline, or tab characters, and it must
+     be no longer than 128 characters.
+     */
+    public var description: String?
 
-     - returns: An initialized `CreateIntent`.
-    */
-    public init(intent: String, description: String? = nil, examples: [CreateExample]? = nil) {
-        self.intent = intent
-        self.description = description
-        self.examples = examples
-    }
-}
+    /**
+     An array of user input examples for the intent.
+     */
+    public var examples: [CreateExample]?
 
-extension CreateIntent: Codable {
-
+    // Map each property name to the key that shall be used for encoding/decoding.
     private enum CodingKeys: String, CodingKey {
         case intent = "intent"
         case description = "description"
         case examples = "examples"
-        static let allValues = [intent, description, examples]
     }
 
-    public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        intent = try container.decode(String.self, forKey: .intent)
-        description = try container.decodeIfPresent(String.self, forKey: .description)
-        examples = try container.decodeIfPresent([CreateExample].self, forKey: .examples)
-    }
+    /**
+     Initialize a `CreateIntent` with member variables.
 
-    public func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(intent, forKey: .intent)
-        try container.encodeIfPresent(description, forKey: .description)
-        try container.encodeIfPresent(examples, forKey: .examples)
+     - parameter intent: The name of the intent. This string must conform to the following restrictions:
+       - It can contain only Unicode alphanumeric, underscore, hyphen, and dot characters.
+       - It cannot begin with the reserved prefix `sys-`.
+       - It must be no longer than 128 characters.
+     - parameter description: The description of the intent. This string cannot contain carriage return, newline, or
+       tab characters, and it must be no longer than 128 characters.
+     - parameter examples: An array of user input examples for the intent.
+
+     - returns: An initialized `CreateIntent`.
+    */
+    public init(
+        intent: String,
+        description: String? = nil,
+        examples: [CreateExample]? = nil
+    )
+    {
+        self.intent = intent
+        self.description = description
+        self.examples = examples
     }
 
 }

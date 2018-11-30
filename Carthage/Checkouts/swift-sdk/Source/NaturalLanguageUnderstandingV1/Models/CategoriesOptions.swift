@@ -15,9 +15,13 @@
  **/
 
 import Foundation
+import RestKit
 
-/** The hierarchical 5-level taxonomy the content is categorized into. */
-public struct CategoriesOptions {
+/**
+ Returns a five-level taxonomy of the content. The top three categories are returned.
+ Supported languages: Arabic, English, French, German, Italian, Japanese, Korean, Portuguese, Spanish.
+ */
+public struct CategoriesOptions: Encodable {
 
     /// Additional properties associated with this model.
     public var additionalProperties: [String: JSON]
@@ -27,16 +31,11 @@ public struct CategoriesOptions {
 
      - returns: An initialized `CategoriesOptions`.
     */
-    public init(additionalProperties: [String: JSON] = [:]) {
+    public init(
+        additionalProperties: [String: JSON] = [:]
+    )
+    {
         self.additionalProperties = additionalProperties
-    }
-}
-
-extension CategoriesOptions: Codable {
-
-    public init(from decoder: Decoder) throws {
-        let dynamicContainer = try decoder.container(keyedBy: DynamicKeys.self)
-        additionalProperties = try dynamicContainer.decode([String: JSON].self, excluding: [CodingKey]())
     }
 
     public func encode(to encoder: Encoder) throws {

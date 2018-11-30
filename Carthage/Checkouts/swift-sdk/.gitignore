@@ -1,5 +1,6 @@
 # Custom
-Credentials.swift
+Source/SupportingFiles/Credentials.swift
+Source/SupportingFiles/WatsonCredentials.swift
 
 # Build generated
 build/
@@ -38,3 +39,4 @@ Carthage/
 
 # swagger-codegen
 .swagger-codegen-ignore
+.swagger-codegen/

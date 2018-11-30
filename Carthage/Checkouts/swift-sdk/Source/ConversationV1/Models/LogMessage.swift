@@ -15,25 +15,41 @@
  **/
 
 import Foundation
+import RestKit
 
-/** Log message details. */
-public struct LogMessage {
+/**
+ Log message details.
+ */
+public struct LogMessage: Codable {
 
-    /// The severity of the log message.
+    /**
+     The severity of the log message.
+     */
     public enum Level: String {
         case info = "info"
         case error = "error"
         case warn = "warn"
     }
 
-    /// The severity of the log message.
+    /**
+     The severity of the log message.
+     */
     public var level: String
 
-    /// The text of the log message.
+    /**
+     The text of the log message.
+     */
     public var msg: String
 
     /// Additional properties associated with this model.
     public var additionalProperties: [String: JSON]
+
+    // Map each property name to the key that shall be used for encoding/decoding.
+    private enum CodingKeys: String, CodingKey {
+        case level = "level"
+        case msg = "msg"
+        static let allValues = [level, msg]
+    }
 
     /**
      Initialize a `LogMessage` with member variables.
@@ -43,19 +59,15 @@ public struct LogMessage {
 
      - returns: An initialized `LogMessage`.
     */
-    public init(level: String, msg: String, additionalProperties: [String: JSON] = [:]) {
+    public init(
+        level: String,
+        msg: String,
+        additionalProperties: [String: JSON] = [:]
+    )
+    {
         self.level = level
         self.msg = msg
         self.additionalProperties = additionalProperties
-    }
-}
-
-extension LogMessage: Codable {
-
-    private enum CodingKeys: String, CodingKey {
-        case level = "level"
-        case msg = "msg"
-        static let allValues = [level, msg]
     }
 
     public init(from decoder: Decoder) throws {

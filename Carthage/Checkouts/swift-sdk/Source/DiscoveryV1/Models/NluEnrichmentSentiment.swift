@@ -16,13 +16,19 @@
 
 import Foundation
 
-/** An object specifying the sentiment extraction enrichment and related parameters. */
+/**
+ An object specifying the sentiment extraction enrichment and related parameters.
+ */
 public struct NluEnrichmentSentiment: Codable {
 
-    /// When `true`, sentiment analysis is performed on the entire field.
+    /**
+     When `true`, sentiment analysis is performed on the entire field.
+     */
     public var document: Bool?
 
-    /// A comma-separated list of target strings that will have any associated sentiment analyzed.
+    /**
+     A comma-separated list of target strings that will have any associated sentiment analyzed.
+     */
     public var targets: [String]?
 
     // Map each property name to the key that shall be used for encoding/decoding.
@@ -39,7 +45,11 @@ public struct NluEnrichmentSentiment: Codable {
 
      - returns: An initialized `NluEnrichmentSentiment`.
     */
-    public init(document: Bool? = nil, targets: [String]? = nil) {
+    public init(
+        document: Bool? = nil,
+        targets: [String]? = nil
+    )
+    {
         self.document = document
         self.targets = targets
     }

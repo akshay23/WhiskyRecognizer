@@ -16,7 +16,9 @@
 
 import Foundation
 
-/** A list of PDF conversion settings. */
+/**
+ A list of PDF conversion settings.
+ */
 public struct PdfSettings: Codable {
 
     public var heading: PdfHeadingDetection?
@@ -33,7 +35,10 @@ public struct PdfSettings: Codable {
 
      - returns: An initialized `PdfSettings`.
     */
-    public init(heading: PdfHeadingDetection? = nil) {
+    public init(
+        heading: PdfHeadingDetection? = nil
+    )
+    {
         self.heading = heading
     }
 

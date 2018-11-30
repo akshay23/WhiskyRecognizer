@@ -17,38 +17,45 @@
 import Foundation
 
 /** UpdateExample. */
-public struct UpdateExample {
+internal struct UpdateExample: Encodable {
 
-    /// The text of the user input example. This string must conform to the following restrictions:  - It cannot contain carriage return, newline, or tab characters.  - It cannot consist of only whitespace characters.  - It must be no longer than 1024 characters.
+    /**
+     The text of the user input example. This string must conform to the following restrictions:
+     - It cannot contain carriage return, newline, or tab characters.
+     - It cannot consist of only whitespace characters.
+     - It must be no longer than 1024 characters.
+     */
     public var text: String?
+
+    /**
+     An array of contextual entity mentions.
+     */
+    public var mentions: [Mentions]?
+
+    // Map each property name to the key that shall be used for encoding/decoding.
+    private enum CodingKeys: String, CodingKey {
+        case text = "text"
+        case mentions = "mentions"
+    }
 
     /**
      Initialize a `UpdateExample` with member variables.
 
-     - parameter text: The text of the user input example. This string must conform to the following restrictions:  - It cannot contain carriage return, newline, or tab characters.  - It cannot consist of only whitespace characters.  - It must be no longer than 1024 characters.
+     - parameter text: The text of the user input example. This string must conform to the following restrictions:
+       - It cannot contain carriage return, newline, or tab characters.
+       - It cannot consist of only whitespace characters.
+       - It must be no longer than 1024 characters.
+     - parameter mentions: An array of contextual entity mentions.
 
      - returns: An initialized `UpdateExample`.
     */
-    public init(text: String? = nil) {
+    public init(
+        text: String? = nil,
+        mentions: [Mentions]? = nil
+    )
+    {
         self.text = text
-    }
-}
-
-extension UpdateExample: Codable {
-
-    private enum CodingKeys: String, CodingKey {
-        case text = "text"
-        static let allValues = [text]
-    }
-
-    public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        text = try container.decodeIfPresent(String.self, forKey: .text)
-    }
-
-    public func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encodeIfPresent(text, forKey: .text)
+        self.mentions = mentions
     }
 
 }

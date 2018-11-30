@@ -1,24 +1,30 @@
 PODS:
-  - Action (3.5.0):
-    - RxCocoa (~> 4.0)
+  - Action (3.9.1):
+    - RxCocoa (~> 4.3)
+    - RxSwift (~> 4.3)
+  - Kingfisher (4.10.1)
+  - Realm (3.12.0):
+    - Realm/Headers (= 3.12.0)
+  - Realm/Headers (3.12.0)
+  - RealmSwift (3.12.0):
+    - Realm (= 3.12.0)
+  - RxAtomic (4.4.0)
+  - RxCocoa (4.4.0):
     - RxSwift (~> 4.0)
-  - Kingfisher (4.7.0)
-  - Realm (3.3.2):
-    - Realm/Headers (= 3.3.2)
-  - Realm/Headers (3.3.2)
-  - RealmSwift (3.3.2):
-    - Realm (= 3.3.2)
-  - RxCocoa (4.1.2):
-    - RxSwift (~> 4.0)
-  - RxRealm (0.7.5):
+  - RxRealm (0.7.6):
     - RealmSwift (~> 3.0)
     - RxSwift (~> 4.0)
-  - RxSwift (4.1.2)
-  - RxSwiftExt (3.2.0):
-    - RxSwiftExt/Core (= 3.2.0)
-  - RxSwiftExt/Core (3.2.0):
+  - RxSwift (4.4.0):
+    - RxAtomic (~> 4.4)
+  - RxSwiftExt (3.4.0):
+    - RxSwiftExt/Core (= 3.4.0)
+    - RxSwiftExt/RxCocoa (= 3.4.0)
+  - RxSwiftExt/Core (3.4.0):
     - RxSwift (~> 4.0)
-  - SnapKit (4.0.0)
+  - RxSwiftExt/RxCocoa (3.4.0):
+    - RxCocoa (~> 4.0)
+    - RxSwiftExt/Core
+  - SnapKit (4.0.1)
 
 DEPENDENCIES:
   - Action
@@ -29,17 +35,31 @@ DEPENDENCIES:
   - RxSwiftExt
   - SnapKit (~> 4.0.0)
 
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - Action
+    - Kingfisher
+    - Realm
+    - RealmSwift
+    - RxAtomic
+    - RxCocoa
+    - RxRealm
+    - RxSwift
+    - RxSwiftExt
+    - SnapKit
+
 SPEC CHECKSUMS:
-  Action: d60087ebce41b969d1afdad01e2fa1372a82f26e
-  Kingfisher: da6b005aa96d37698e3e4f1ccfe96a5b9bbf27d6
-  Realm: d927fbf66df5532cfafc08afb5f7e53ded37b894
-  RealmSwift: 4e903a494e05d866581d69ad6f7e7b879d446baf
-  RxCocoa: d88ba0f1f6abf040011a9eb4b539324fc426843a
-  RxRealm: a6c6c0a07cb61f34209969ca6657734edfdfff30
-  RxSwift: e49536837d9901277638493ea537394d4b55f570
-  RxSwiftExt: 64b7140124629a6a084159735f3714f0fb1c61d6
-  SnapKit: a42d492c16e80209130a3379f73596c3454b7694
+  Action: 2f461c203c480b17aa99b3bb166e4329ecff6908
+  Kingfisher: c148cd7b47ebde9989f6bc7c27dcaa79d81279a0
+  Realm: cdaef23c4ddb36ab1ddffed23f5a7f3332fc5585
+  RealmSwift: 5576324033f0aa5ef1e0a839a3da2281dff47a7f
+  RxAtomic: eacf60db868c96bfd63320e28619fe29c179656f
+  RxCocoa: df63ebf7b9a70d6b4eeea407ed5dd4efc8979749
+  RxRealm: 5379eddd74f8d617ca7681d1f8d144af25b432b0
+  RxSwift: 5976ecd04fc2fefd648827c23de5e11157faa973
+  RxSwiftExt: 01f8ecbeeb355698e9c75365ebe908b00dacf45d
+  SnapKit: 0de968a9fec17499afa29683b05d0c775b6d1c29
 
 PODFILE CHECKSUM: edcea3914f3feae7cccc5ee22c1d413ac4f01d12
 
-COCOAPODS: 1.4.0
+COCOAPODS: 1.5.3

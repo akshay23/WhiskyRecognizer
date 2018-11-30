@@ -15,9 +15,12 @@
  **/
 
 import Foundation
+import RestKit
 
-/** For internal use only. */
-public struct SystemResponse {
+/**
+ For internal use only.
+ */
+public struct SystemResponse: Codable {
 
     /// Additional properties associated with this model.
     public var additionalProperties: [String: JSON]
@@ -27,12 +30,12 @@ public struct SystemResponse {
 
      - returns: An initialized `SystemResponse`.
     */
-    public init(additionalProperties: [String: JSON] = [:]) {
+    public init(
+        additionalProperties: [String: JSON] = [:]
+    )
+    {
         self.additionalProperties = additionalProperties
     }
-}
-
-extension SystemResponse: Codable {
 
     public init(from decoder: Decoder) throws {
         let dynamicContainer = try decoder.container(keyedBy: DynamicKeys.self)

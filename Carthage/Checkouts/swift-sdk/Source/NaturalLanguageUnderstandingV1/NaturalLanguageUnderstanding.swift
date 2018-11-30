@@ -13,54 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  **/
+// swiftlint:disable file_length
 
 import Foundation
+import RestKit
 
 /**
-   Analyze various features of text content at scale. Provide text, raw HTML, or a public URL, and
-  IBM Watson Natural Language Understanding will give you results for the features you request. The
-  service cleans HTML content before analysis by default, so the results can ignore most
-  advertisements and other unwanted content.
-
-  ### Concepts
-  Identify general concepts that are referenced or alluded to in your content. Concepts that are
-  detected typically have an associated link to a DBpedia resource.
-
-  ### Entities
-  Detect important people, places, geopolitical entities and other types of entities in your
-  content. Entity detection recognizes consecutive coreferences of each entity. For example,
-  analysis of the following text would count "Barack Obama" and "He" as the same entity:
-
-  "Barack Obama was the 44th President of the United States. He took office in January 2009."
-
-  ### Keywords
-  Determine the most important keywords in your content. Keyword phrases are organized by relevance
-  in the results.
-
-  ### Categories
-  Categorize your content into a hierarchical 5-level taxonomy. For example, "Leonardo DiCaprio won
-  an Oscar" returns "/art and entertainment/movies and tv/movies" as the most confident
-  classification.
-
-  ### Sentiment
-  Determine whether your content conveys postive or negative sentiment. Sentiment information can be
-  returned for detected entities, keywords, or user-specified target phrases found in the text.
-
-  ### Emotion
-  Detect anger, disgust, fear, joy, or sadness that is conveyed by your content. Emotion information
-  can be returned for detected entities, keywords, or user-specified target phrases found in the
-  text.
-
-  ### Relations
-  Recognize when two entities are related, and identify the type of relation.  For example, you can
-  identify an "awardedTo" relation between an award and its recipient.
-
-  ### Semantic Roles
-  Parse sentences into subject-action-object form, and identify entities and keywords that are
-  subjects or objects of an action.
-
-  ### Metadata
-  Get author information, publication date, and the title of your text/HTML content.
+ Analyze various features of text content at scale. Provide text, raw HTML, or a public URL and IBM Watson Natural
+ Language Understanding will give you results for the features you request. The service cleans HTML content before
+ analysis by default, so the results can ignore most advertisements and other unwanted content.
+ You can create [custom models](/docs/services/natural-language-understanding/customizing.html) with Watson Knowledge
+ Studio to detect custom entities and relations in Natural Language Understanding.
  */
 public class NaturalLanguageUnderstanding {
 
@@ -70,7 +33,8 @@ public class NaturalLanguageUnderstanding {
     /// The default HTTP headers for all requests to the service.
     public var defaultHeaders = [String: String]()
 
-    private let credentials: Credentials
+    private let session = URLSession(configuration: URLSessionConfiguration.default)
+    private var authMethod: AuthenticationMethod
     private let domain = "com.ibm.watson.developer-cloud.NaturalLanguageUnderstandingV1"
     private let version: String
 
@@ -83,59 +47,84 @@ public class NaturalLanguageUnderstanding {
        in "YYYY-MM-DD" format.
      */
     public init(username: String, password: String, version: String) {
-        self.credentials = .basicAuthentication(username: username, password: password)
+        self.authMethod = Shared.getAuthMethod(username: username, password: password)
         self.version = version
+        Shared.configureRestRequest()
+    }
+
+    /**
+     Create a `NaturalLanguageUnderstanding` object.
+
+     - parameter version: The release date of the version of the API to use. Specify the date
+       in "YYYY-MM-DD" format.
+     - parameter apiKey: An API key for IAM that can be used to obtain access tokens for the service.
+     - parameter iamUrl: The URL for the IAM service.
+     */
+    public init(version: String, apiKey: String, iamUrl: String? = nil) {
+        self.authMethod = Shared.getAuthMethod(apiKey: apiKey, iamURL: iamUrl)
+        self.version = version
+        Shared.configureRestRequest()
+    }
+
+    /**
+     Create a `NaturalLanguageUnderstanding` object.
+
+     - parameter version: The release date of the version of the API to use. Specify the date
+       in "YYYY-MM-DD" format.
+     - parameter accessToken: An access token for the service.
+     */
+    public init(version: String, accessToken: String) {
+        self.authMethod = IAMAccessToken(accessToken: accessToken)
+        self.version = version
+        Shared.configureRestRequest()
+    }
+
+    public func accessToken(_ newToken: String) {
+        if self.authMethod is IAMAccessToken {
+            self.authMethod = IAMAccessToken(accessToken: newToken)
+        }
     }
 
     /**
      If the response or data represents an error returned by the Natural Language Understanding service,
      then return NSError with information about the error that occured. Otherwise, return nil.
 
-     - parameter response: the URL response returned from the service.
      - parameter data: Raw data returned from the service that may represent an error.
+     - parameter response: the URL response returned from the service.
      */
-    private func responseToError(response: HTTPURLResponse?, data: Data?) -> NSError? {
+    func errorResponseDecoder(data: Data, response: HTTPURLResponse) -> Error {
 
-        // First check http status code in response
-        if let response = response {
-            if (200..<300).contains(response.statusCode) {
-                return nil
-            }
-        }
-
-        // ensure data is not nil
-        guard let data = data else {
-            if let code = response?.statusCode {
-                return NSError(domain: domain, code: code, userInfo: nil)
-            }
-            return nil  // RestKit will generate error for this case
-        }
-
+        let code = response.statusCode
         do {
-            let json = try JSONWrapper(data: data)
-            let code = response?.statusCode ?? 400
-            let message = try json.getString(at: "error")
-            var userInfo = [NSLocalizedDescriptionKey: message]
-            if let description = try? json.getString(at: "description") {
+            let json = try JSONDecoder().decode([String: JSON].self, from: data)
+            var userInfo: [String: Any] = [:]
+            if case let .some(.string(message)) = json["error"] {
+                userInfo[NSLocalizedDescriptionKey] = message
+            }
+            if case let .some(.string(description)) = json["description"] {
                 userInfo[NSLocalizedRecoverySuggestionErrorKey] = description
             }
             return NSError(domain: domain, code: code, userInfo: userInfo)
         } catch {
-            return nil
+            return NSError(domain: domain, code: code, userInfo: nil)
         }
     }
 
     /**
      Analyze text, HTML, or a public webpage.
 
-     Analyzes text, HTML, or a public webpage with one or more text analysis features.
+     Analyzes text, HTML, or a public webpage with one or more text analysis features, including categories, concepts,
+     emotion, entities, keywords, metadata, relations, semantic roles, and sentiment.
 
-     - parameter parameters: An object containing request parameters. The `features` object and one of the `text`, `html`, or `url` attributes are required.
+     - parameter parameters: An object containing request parameters. The `features` object and one of the `text`,
+       `html`, or `url` attributes are required.
+     - parameter headers: A dictionary of request headers to be sent with this request.
      - parameter failure: A function executed if an error occurs.
      - parameter success: A function executed with the successful result.
-    */
+     */
     public func analyze(
         parameters: Parameters,
+        headers: [String: String]? = nil,
         failure: ((Error) -> Void)? = nil,
         success: @escaping (AnalysisResults) -> Void)
     {
@@ -145,25 +134,80 @@ public class NaturalLanguageUnderstanding {
             return
         }
 
+        // construct header parameters
+        var headerParameters = defaultHeaders
+        if let headers = headers {
+            headerParameters.merge(headers) { (_, new) in new }
+        }
+        headerParameters["Accept"] = "application/json"
+        headerParameters["Content-Type"] = "application/json"
+
         // construct query parameters
         var queryParameters = [URLQueryItem]()
         queryParameters.append(URLQueryItem(name: "version", value: version))
 
         // construct REST request
         let request = RestRequest(
+            session: session,
+            authMethod: authMethod,
+            errorResponseDecoder: errorResponseDecoder,
             method: "POST",
             url: serviceURL + "/v1/analyze",
-            credentials: credentials,
-            headerParameters: defaultHeaders,
-            acceptType: "application/json",
-            contentType: "application/json",
+            headerParameters: headerParameters,
             queryItems: queryParameters,
             messageBody: body
         )
 
         // execute REST request
-        request.responseObject(responseToError: responseToError) {
+        request.responseObject {
             (response: RestResponse<AnalysisResults>) in
+            switch response.result {
+            case .success(let retval): success(retval)
+            case .failure(let error): failure?(error)
+            }
+        }
+    }
+
+    /**
+     List models.
+
+     Lists available models for Relations and Entities features, including Watson Knowledge Studio custom models that
+     you have created and linked to your Natural Language Understanding service.
+
+     - parameter headers: A dictionary of request headers to be sent with this request.
+     - parameter failure: A function executed if an error occurs.
+     - parameter success: A function executed with the successful result.
+     */
+    public func listModels(
+        headers: [String: String]? = nil,
+        failure: ((Error) -> Void)? = nil,
+        success: @escaping (ListModelsResults) -> Void)
+    {
+        // construct header parameters
+        var headerParameters = defaultHeaders
+        if let headers = headers {
+            headerParameters.merge(headers) { (_, new) in new }
+        }
+        headerParameters["Accept"] = "application/json"
+
+        // construct query parameters
+        var queryParameters = [URLQueryItem]()
+        queryParameters.append(URLQueryItem(name: "version", value: version))
+
+        // construct REST request
+        let request = RestRequest(
+            session: session,
+            authMethod: authMethod,
+            errorResponseDecoder: errorResponseDecoder,
+            method: "GET",
+            url: serviceURL + "/v1/models",
+            headerParameters: headerParameters,
+            queryItems: queryParameters
+        )
+
+        // execute REST request
+        request.responseObject {
+            (response: RestResponse<ListModelsResults>) in
             switch response.result {
             case .success(let retval): success(retval)
             case .failure(let error): failure?(error)
@@ -176,15 +220,24 @@ public class NaturalLanguageUnderstanding {
 
      Deletes a custom model.
 
-     - parameter modelID: modelID of the model to delete.
+     - parameter modelID: model_id of the model to delete.
+     - parameter headers: A dictionary of request headers to be sent with this request.
      - parameter failure: A function executed if an error occurs.
      - parameter success: A function executed with the successful result.
-    */
+     */
     public func deleteModel(
         modelID: String,
+        headers: [String: String]? = nil,
         failure: ((Error) -> Void)? = nil,
         success: @escaping (DeleteModelResults) -> Void)
     {
+        // construct header parameters
+        var headerParameters = defaultHeaders
+        if let headers = headers {
+            headerParameters.merge(headers) { (_, new) in new }
+        }
+        headerParameters["Accept"] = "application/json"
+
         // construct query parameters
         var queryParameters = [URLQueryItem]()
         queryParameters.append(URLQueryItem(name: "version", value: version))
@@ -196,57 +249,18 @@ public class NaturalLanguageUnderstanding {
             return
         }
         let request = RestRequest(
+            session: session,
+            authMethod: authMethod,
+            errorResponseDecoder: errorResponseDecoder,
             method: "DELETE",
             url: serviceURL + encodedPath,
-            credentials: credentials,
-            headerParameters: defaultHeaders,
-            acceptType: "application/json",
-            contentType: nil,
-            queryItems: queryParameters,
-            messageBody: nil
+            headerParameters: headerParameters,
+            queryItems: queryParameters
         )
 
         // execute REST request
-        request.responseObject(responseToError: responseToError) {
+        request.responseObject {
             (response: RestResponse<DeleteModelResults>) in
-            switch response.result {
-            case .success(let retval): success(retval)
-            case .failure(let error): failure?(error)
-            }
-        }
-    }
-
-    /**
-     List models.
-
-     Lists available models for Relations and Entities features, including Watson Knowledge Studio custom models that you have created and linked to your Natural Language Understanding service.
-
-     - parameter failure: A function executed if an error occurs.
-     - parameter success: A function executed with the successful result.
-    */
-    public func listModels(
-        failure: ((Error) -> Void)? = nil,
-        success: @escaping (ListModelsResults) -> Void)
-    {
-        // construct query parameters
-        var queryParameters = [URLQueryItem]()
-        queryParameters.append(URLQueryItem(name: "version", value: version))
-
-        // construct REST request
-        let request = RestRequest(
-            method: "GET",
-            url: serviceURL + "/v1/models",
-            credentials: credentials,
-            headerParameters: defaultHeaders,
-            acceptType: "application/json",
-            contentType: nil,
-            queryItems: queryParameters,
-            messageBody: nil
-        )
-
-        // execute REST request
-        request.responseObject(responseToError: responseToError) {
-            (response: RestResponse<ListModelsResults>) in
             switch response.result {
             case .success(let retval): success(retval)
             case .failure(let error): failure?(error)

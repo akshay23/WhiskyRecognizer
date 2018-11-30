@@ -16,19 +16,35 @@
 
 import Foundation
 
-/** Document conversion settings. */
+/**
+ Document conversion settings.
+ */
 public struct Conversions: Codable {
 
-    /// A list of PDF conversion settings.
+    /**
+     A list of PDF conversion settings.
+     */
     public var pdf: PdfSettings?
 
-    /// A list of Word conversion settings.
+    /**
+     A list of Word conversion settings.
+     */
     public var word: WordSettings?
 
-    /// A list of HTML conversion settings.
+    /**
+     A list of HTML conversion settings.
+     */
     public var html: HtmlSettings?
 
-    /// Defines operations that can be used to transform the final output JSON into a normalized form. Operations are executed in the order that they appear in the array.
+    /**
+     A list of Document Segmentation settings.
+     */
+    public var segment: SegmentSettings?
+
+    /**
+     Defines operations that can be used to transform the final output JSON into a normalized form. Operations are
+     executed in the order that they appear in the array.
+     */
     public var jsonNormalizations: [NormalizationOperation]?
 
     // Map each property name to the key that shall be used for encoding/decoding.
@@ -36,6 +52,7 @@ public struct Conversions: Codable {
         case pdf = "pdf"
         case word = "word"
         case html = "html"
+        case segment = "segment"
         case jsonNormalizations = "json_normalizations"
     }
 
@@ -45,14 +62,24 @@ public struct Conversions: Codable {
      - parameter pdf: A list of PDF conversion settings.
      - parameter word: A list of Word conversion settings.
      - parameter html: A list of HTML conversion settings.
-     - parameter jsonNormalizations: Defines operations that can be used to transform the final output JSON into a normalized form. Operations are executed in the order that they appear in the array.
+     - parameter segment: A list of Document Segmentation settings.
+     - parameter jsonNormalizations: Defines operations that can be used to transform the final output JSON into a
+       normalized form. Operations are executed in the order that they appear in the array.
 
      - returns: An initialized `Conversions`.
     */
-    public init(pdf: PdfSettings? = nil, word: WordSettings? = nil, html: HtmlSettings? = nil, jsonNormalizations: [NormalizationOperation]? = nil) {
+    public init(
+        pdf: PdfSettings? = nil,
+        word: WordSettings? = nil,
+        html: HtmlSettings? = nil,
+        segment: SegmentSettings? = nil,
+        jsonNormalizations: [NormalizationOperation]? = nil
+    )
+    {
         self.pdf = pdf
         self.word = word
         self.html = html
+        self.segment = segment
         self.jsonNormalizations = jsonNormalizations
     }
 

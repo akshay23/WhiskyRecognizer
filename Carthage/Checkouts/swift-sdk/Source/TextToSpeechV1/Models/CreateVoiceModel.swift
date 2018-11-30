@@ -17,9 +17,11 @@
 import Foundation
 
 /** CreateVoiceModel. */
-public struct CreateVoiceModel {
+internal struct CreateVoiceModel: Encodable {
 
-    /// The language of the new custom voice model. Omit the parameter to use the the default language, `en-US`.
+    /**
+     The language of the new custom voice model. Omit the parameter to use the the default language, `en-US`.
+     */
     public enum Language: String {
         case deDe = "de-DE"
         case enUs = "en-US"
@@ -33,52 +35,47 @@ public struct CreateVoiceModel {
         case ptBr = "pt-BR"
     }
 
-    /// The name of the new custom voice model.
+    /**
+     The name of the new custom voice model.
+     */
     public var name: String
 
-    /// The language of the new custom voice model. Omit the parameter to use the the default language, `en-US`.
+    /**
+     The language of the new custom voice model. Omit the parameter to use the the default language, `en-US`.
+     */
     public var language: String?
 
-    /// A description of the new custom voice model. Specifying a description is recommended.
+    /**
+     A description of the new custom voice model. Specifying a description is recommended.
+     */
     public var description: String?
+
+    // Map each property name to the key that shall be used for encoding/decoding.
+    private enum CodingKeys: String, CodingKey {
+        case name = "name"
+        case language = "language"
+        case description = "description"
+    }
 
     /**
      Initialize a `CreateVoiceModel` with member variables.
 
      - parameter name: The name of the new custom voice model.
-     - parameter language: The language of the new custom voice model. Omit the parameter to use the the default language, `en-US`.
+     - parameter language: The language of the new custom voice model. Omit the parameter to use the the default
+       language, `en-US`.
      - parameter description: A description of the new custom voice model. Specifying a description is recommended.
 
      - returns: An initialized `CreateVoiceModel`.
     */
-    public init(name: String, language: String? = nil, description: String? = nil) {
+    public init(
+        name: String,
+        language: String? = nil,
+        description: String? = nil
+    )
+    {
         self.name = name
         self.language = language
         self.description = description
-    }
-}
-
-extension CreateVoiceModel: Codable {
-
-    private enum CodingKeys: String, CodingKey {
-        case name = "name"
-        case language = "language"
-        case description = "description"
-        static let allValues = [name, language, description]
-    }
-
-    public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        name = try container.decode(String.self, forKey: .name)
-        language = try container.decodeIfPresent(String.self, forKey: .language)
-        description = try container.decodeIfPresent(String.self, forKey: .description)
-    }
-
-    public func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(name, forKey: .name)
-        try container.encodeIfPresent(language, forKey: .language)
-        try container.encodeIfPresent(description, forKey: .description)
     }
 
 }

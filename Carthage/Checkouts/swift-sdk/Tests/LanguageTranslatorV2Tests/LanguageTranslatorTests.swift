@@ -14,11 +14,12 @@
  * limitations under the License.
  **/
 
-// swiftlint:disable function_body_length force_try force_unwrapping superfluous_disable_command
+// swiftlint:disable function_body_length force_try force_unwrapping file_length
 
 import XCTest
 import Foundation
 import LanguageTranslatorV2
+import RestKit
 
 class LanguageTranslatorTests: XCTestCase {
 
@@ -52,8 +53,8 @@ class LanguageTranslatorTests: XCTestCase {
 
     /** Instantiate Language Translator. */
     func instantiateLanguageTranslator() {
-        let username = Credentials.LanguageTranslatorUsername
-        let password = Credentials.LanguageTranslatorPassword
+        let username = WatsonCredentials.LanguageTranslatorUsername
+        let password = WatsonCredentials.LanguageTranslatorPassword
         languageTranslator = LanguageTranslator(username: username, password: password)
         languageTranslator.defaultHeaders["X-Watson-Learning-Opt-Out"] = "true"
         languageTranslator.defaultHeaders["X-Watson-Test"] = "true"
@@ -88,7 +89,7 @@ class LanguageTranslatorTests: XCTestCase {
     }
 
     /** Wait for expectations. */
-    func waitForExpectations(timeout: TimeInterval = 10.0) {
+    func waitForExpectations(timeout: TimeInterval = 20.0) {
         waitForExpectations(timeout: timeout) { error in
             XCTAssertNil(error, "Timeout")
         }
@@ -136,14 +137,14 @@ class LanguageTranslatorTests: XCTestCase {
         let creationExpectation = self.expectation(description: "Create a custom language model.")
         let deletionExpectation = self.expectation(description: "Delete the custom language model.")
 
-        #if os(iOS)
+        #if os(Linux)
+            let glossary = URL(fileURLWithPath: "Tests/LanguageTranslatorV2Tests/glossary.tmx")
+        #else
             let bundle = Bundle(for: type(of: self))
             guard let glossary = bundle.url(forResource: "glossary", withExtension: "tmx") else {
                 XCTFail("Unable to read forced glossary.")
                 return
             }
-        #else
-            let glossary = URL(fileURLWithPath: "Tests/LanguageTranslatorV2Tests/glossary.tmx")
         #endif
 
         languageTranslator.createModel(

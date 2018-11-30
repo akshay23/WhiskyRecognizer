@@ -17,62 +17,34 @@
 import Foundation
 
 /** Model. */
-public struct Model {
-
-    /// Shows as available if the model is ready for use.
-    public var status: String?
-
-    /// Unique model ID.
-    public var modelID: String?
-
-    /// ISO 639-1 code indicating the language of the model.
-    public var language: String?
-
-    /// Model description.
-    public var description: String?
+public struct Model: Decodable {
 
     /**
-     Initialize a `Model` with member variables.
+     Shows as available if the model is ready for use.
+     */
+    public var status: String?
 
-     - parameter status: Shows as available if the model is ready for use.
-     - parameter modelID: Unique model ID.
-     - parameter language: ISO 639-1 code indicating the language of the model.
-     - parameter description: Model description.
+    /**
+     Unique model ID.
+     */
+    public var modelID: String?
 
-     - returns: An initialized `Model`.
-    */
-    public init(status: String? = nil, modelID: String? = nil, language: String? = nil, description: String? = nil) {
-        self.status = status
-        self.modelID = modelID
-        self.language = language
-        self.description = description
-    }
-}
+    /**
+     ISO 639-1 code indicating the language of the model.
+     */
+    public var language: String?
 
-extension Model: Codable {
+    /**
+     Model description.
+     */
+    public var description: String?
 
+    // Map each property name to the key that shall be used for encoding/decoding.
     private enum CodingKeys: String, CodingKey {
         case status = "status"
         case modelID = "model_id"
         case language = "language"
         case description = "description"
-        static let allValues = [status, modelID, language, description]
-    }
-
-    public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        status = try container.decodeIfPresent(String.self, forKey: .status)
-        modelID = try container.decodeIfPresent(String.self, forKey: .modelID)
-        language = try container.decodeIfPresent(String.self, forKey: .language)
-        description = try container.decodeIfPresent(String.self, forKey: .description)
-    }
-
-    public func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encodeIfPresent(status, forKey: .status)
-        try container.encodeIfPresent(modelID, forKey: .modelID)
-        try container.encodeIfPresent(language, forKey: .language)
-        try container.encodeIfPresent(description, forKey: .description)
     }
 
 }

@@ -16,16 +16,24 @@
 
 import Foundation
 
-/** An object specifiying the semantic roles enrichment and related parameters. */
+/**
+ An object specifiying the semantic roles enrichment and related parameters.
+ */
 public struct NluEnrichmentSemanticRoles: Codable {
 
-    /// When `true` entities are extracted from the identified sentence parts.
+    /**
+     When `true`, entities are extracted from the identified sentence parts.
+     */
     public var entities: Bool?
 
-    /// When `true`, keywords are extracted from the identified sentence parts.
+    /**
+     When `true`, keywords are extracted from the identified sentence parts.
+     */
     public var keywords: Bool?
 
-    /// The maximum number of semantic roles enrichments to extact from each instance of the specified field.
+    /**
+     The maximum number of semantic roles enrichments to extact from each instance of the specified field.
+     */
     public var limit: Int?
 
     // Map each property name to the key that shall be used for encoding/decoding.
@@ -38,13 +46,19 @@ public struct NluEnrichmentSemanticRoles: Codable {
     /**
      Initialize a `NluEnrichmentSemanticRoles` with member variables.
 
-     - parameter entities: When `true` entities are extracted from the identified sentence parts.
+     - parameter entities: When `true`, entities are extracted from the identified sentence parts.
      - parameter keywords: When `true`, keywords are extracted from the identified sentence parts.
-     - parameter limit: The maximum number of semantic roles enrichments to extact from each instance of the specified field.
+     - parameter limit: The maximum number of semantic roles enrichments to extact from each instance of the
+       specified field.
 
      - returns: An initialized `NluEnrichmentSemanticRoles`.
     */
-    public init(entities: Bool? = nil, keywords: Bool? = nil, limit: Int? = nil) {
+    public init(
+        entities: Bool? = nil,
+        keywords: Bool? = nil,
+        limit: Int? = nil
+    )
+    {
         self.entities = entities
         self.keywords = keywords
         self.limit = limit

@@ -17,53 +17,28 @@
 import Foundation
 
 /** RelationArgument. */
-public struct RelationArgument {
-
-    public var entities: [RelationEntity]?
-
-    /// Character offsets indicating the beginning and end of the mention in the analyzed text.
-    public var location: [Int]?
-
-    /// Text that corresponds to the argument.
-    public var text: String?
+public struct RelationArgument: Decodable {
 
     /**
-     Initialize a `RelationArgument` with member variables.
+     An array of extracted entities.
+     */
+    public var entities: [RelationEntity]?
 
-     - parameter entities:
-     - parameter location: Character offsets indicating the beginning and end of the mention in the analyzed text.
-     - parameter text: Text that corresponds to the argument.
+    /**
+     Character offsets indicating the beginning and end of the mention in the analyzed text.
+     */
+    public var location: [Int]?
 
-     - returns: An initialized `RelationArgument`.
-    */
-    public init(entities: [RelationEntity]? = nil, location: [Int]? = nil, text: String? = nil) {
-        self.entities = entities
-        self.location = location
-        self.text = text
-    }
-}
+    /**
+     Text that corresponds to the argument.
+     */
+    public var text: String?
 
-extension RelationArgument: Codable {
-
+    // Map each property name to the key that shall be used for encoding/decoding.
     private enum CodingKeys: String, CodingKey {
         case entities = "entities"
         case location = "location"
         case text = "text"
-        static let allValues = [entities, location, text]
-    }
-
-    public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        entities = try container.decodeIfPresent([RelationEntity].self, forKey: .entities)
-        location = try container.decodeIfPresent([Int].self, forKey: .location)
-        text = try container.decodeIfPresent(String.self, forKey: .text)
-    }
-
-    public func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encodeIfPresent(entities, forKey: .entities)
-        try container.encodeIfPresent(location, forKey: .location)
-        try container.encodeIfPresent(text, forKey: .text)
     }
 
 }

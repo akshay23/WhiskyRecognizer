@@ -17,54 +17,28 @@
 import Foundation
 
 /** Synonym. */
-public struct Synonym {
-
-    /// The text of the synonym.
-    public var synonymText: String
-
-    /// The timestamp for creation of the synonym.
-    public var created: String?
-
-    /// The timestamp for the most recent update to the synonym.
-    public var updated: String?
+public struct Synonym: Decodable {
 
     /**
-     Initialize a `Synonym` with member variables.
+     The text of the synonym.
+     */
+    public var synonymText: String
 
-     - parameter synonymText: The text of the synonym.
-     - parameter created: The timestamp for creation of the synonym.
-     - parameter updated: The timestamp for the most recent update to the synonym.
+    /**
+     The timestamp for creation of the synonym.
+     */
+    public var created: String?
 
-     - returns: An initialized `Synonym`.
-    */
-    public init(synonymText: String, created: String? = nil, updated: String? = nil) {
-        self.synonymText = synonymText
-        self.created = created
-        self.updated = updated
-    }
-}
+    /**
+     The timestamp for the most recent update to the synonym.
+     */
+    public var updated: String?
 
-extension Synonym: Codable {
-
+    // Map each property name to the key that shall be used for encoding/decoding.
     private enum CodingKeys: String, CodingKey {
         case synonymText = "synonym"
         case created = "created"
         case updated = "updated"
-        static let allValues = [synonymText, created, updated]
-    }
-
-    public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        synonymText = try container.decode(String.self, forKey: .synonymText)
-        created = try container.decodeIfPresent(String.self, forKey: .created)
-        updated = try container.decodeIfPresent(String.self, forKey: .updated)
-    }
-
-    public func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(synonymText, forKey: .synonymText)
-        try container.encodeIfPresent(created, forKey: .created)
-        try container.encodeIfPresent(updated, forKey: .updated)
     }
 
 }

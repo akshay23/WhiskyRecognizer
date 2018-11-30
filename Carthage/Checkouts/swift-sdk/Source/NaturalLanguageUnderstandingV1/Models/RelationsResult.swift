@@ -16,63 +16,37 @@
 
 import Foundation
 
-/** The relations between entities found in the content. */
-public struct RelationsResult {
-
-    /// Confidence score for the relation. Higher values indicate greater confidence.
-    public var score: Double?
-
-    /// The sentence that contains the relation.
-    public var sentence: String?
-
-    /// The type of the relation.
-    public var type: String?
-
-    /// The extracted relation objects from the text.
-    public var arguments: [RelationArgument]?
+/**
+ The relations between entities found in the content.
+ */
+public struct RelationsResult: Decodable {
 
     /**
-     Initialize a `RelationsResult` with member variables.
+     Confidence score for the relation. Higher values indicate greater confidence.
+     */
+    public var score: Double?
 
-     - parameter score: Confidence score for the relation. Higher values indicate greater confidence.
-     - parameter sentence: The sentence that contains the relation.
-     - parameter type: The type of the relation.
-     - parameter arguments: The extracted relation objects from the text.
+    /**
+     The sentence that contains the relation.
+     */
+    public var sentence: String?
 
-     - returns: An initialized `RelationsResult`.
-    */
-    public init(score: Double? = nil, sentence: String? = nil, type: String? = nil, arguments: [RelationArgument]? = nil) {
-        self.score = score
-        self.sentence = sentence
-        self.type = type
-        self.arguments = arguments
-    }
-}
+    /**
+     The type of the relation.
+     */
+    public var type: String?
 
-extension RelationsResult: Codable {
+    /**
+     The extracted relation objects from the text.
+     */
+    public var arguments: [RelationArgument]?
 
+    // Map each property name to the key that shall be used for encoding/decoding.
     private enum CodingKeys: String, CodingKey {
         case score = "score"
         case sentence = "sentence"
         case type = "type"
         case arguments = "arguments"
-        static let allValues = [score, sentence, type, arguments]
-    }
-
-    public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        score = try container.decodeIfPresent(Double.self, forKey: .score)
-        sentence = try container.decodeIfPresent(String.self, forKey: .sentence)
-        type = try container.decodeIfPresent(String.self, forKey: .type)
-        arguments = try container.decodeIfPresent([RelationArgument].self, forKey: .arguments)
-    }
-
-    public func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encodeIfPresent(score, forKey: .score)
-        try container.encodeIfPresent(sentence, forKey: .sentence)
-        try container.encodeIfPresent(type, forKey: .type)
-        try container.encodeIfPresent(arguments, forKey: .arguments)
     }
 
 }

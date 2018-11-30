@@ -17,10 +17,17 @@
 import Foundation
 
 /** UpdateCounterexample. */
-public struct UpdateCounterexample {
+internal struct UpdateCounterexample: Encodable {
 
-    /// The text of a user input counterexample.
+    /**
+     The text of a user input counterexample.
+     */
     public var text: String?
+
+    // Map each property name to the key that shall be used for encoding/decoding.
+    private enum CodingKeys: String, CodingKey {
+        case text = "text"
+    }
 
     /**
      Initialize a `UpdateCounterexample` with member variables.
@@ -29,26 +36,11 @@ public struct UpdateCounterexample {
 
      - returns: An initialized `UpdateCounterexample`.
     */
-    public init(text: String? = nil) {
+    public init(
+        text: String? = nil
+    )
+    {
         self.text = text
-    }
-}
-
-extension UpdateCounterexample: Codable {
-
-    private enum CodingKeys: String, CodingKey {
-        case text = "text"
-        static let allValues = [text]
-    }
-
-    public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        text = try container.decodeIfPresent(String.self, forKey: .text)
-    }
-
-    public func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encodeIfPresent(text, forKey: .text)
     }
 
 }

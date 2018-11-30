@@ -16,13 +16,19 @@
 
 import Foundation
 
-/** Summary of the collection usage in the environment. */
+/**
+ Summary of the collection usage in the environment.
+ */
 public struct CollectionUsage: Decodable {
 
-    /// Number of active collections in the environment.
+    /**
+     Number of active collections in the environment.
+     */
     public var available: Int?
 
-    /// Total number of collections allowed in the environment.
+    /**
+     Total number of collections allowed in the environment.
+     */
     public var maximumAllowed: Int?
 
     // Map each property name to the key that shall be used for encoding/decoding.

@@ -17,38 +17,31 @@
 import Foundation
 
 /** ToneChatInput. */
-public struct ToneChatInput {
+internal struct ToneChatInput: Encodable {
 
-    /// An array of `Utterance` objects that provides the input content that the service is to analyze.
+    /**
+     An array of `Utterance` objects that provides the input content that the service is to analyze.
+     */
     public var utterances: [Utterance]
+
+    // Map each property name to the key that shall be used for encoding/decoding.
+    private enum CodingKeys: String, CodingKey {
+        case utterances = "utterances"
+    }
 
     /**
      Initialize a `ToneChatInput` with member variables.
 
-     - parameter utterances: An array of `Utterance` objects that provides the input content that the service is to analyze.
+     - parameter utterances: An array of `Utterance` objects that provides the input content that the service is to
+       analyze.
 
      - returns: An initialized `ToneChatInput`.
     */
-    public init(utterances: [Utterance]) {
+    public init(
+        utterances: [Utterance]
+    )
+    {
         self.utterances = utterances
-    }
-}
-
-extension ToneChatInput: Codable {
-
-    private enum CodingKeys: String, CodingKey {
-        case utterances = "utterances"
-        static let allValues = [utterances]
-    }
-
-    public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        utterances = try container.decode([Utterance].self, forKey: .utterances)
-    }
-
-    public func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(utterances, forKey: .utterances)
     }
 
 }

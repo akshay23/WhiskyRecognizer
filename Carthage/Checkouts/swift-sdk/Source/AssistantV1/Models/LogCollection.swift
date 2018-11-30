@@ -17,46 +17,22 @@
 import Foundation
 
 /** LogCollection. */
-public struct LogCollection {
-
-    /// An array of objects describing log events.
-    public var logs: [LogExport]
-
-    /// The pagination data for the returned objects.
-    public var pagination: LogPagination
+public struct LogCollection: Decodable {
 
     /**
-     Initialize a `LogCollection` with member variables.
+     An array of objects describing log events.
+     */
+    public var logs: [LogExport]
 
-     - parameter logs: An array of objects describing log events.
-     - parameter pagination: The pagination data for the returned objects.
+    /**
+     The pagination data for the returned objects.
+     */
+    public var pagination: LogPagination
 
-     - returns: An initialized `LogCollection`.
-    */
-    public init(logs: [LogExport], pagination: LogPagination) {
-        self.logs = logs
-        self.pagination = pagination
-    }
-}
-
-extension LogCollection: Codable {
-
+    // Map each property name to the key that shall be used for encoding/decoding.
     private enum CodingKeys: String, CodingKey {
         case logs = "logs"
         case pagination = "pagination"
-        static let allValues = [logs, pagination]
-    }
-
-    public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        logs = try container.decode([LogExport].self, forKey: .logs)
-        pagination = try container.decode(LogPagination.self, forKey: .pagination)
-    }
-
-    public func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(logs, forKey: .logs)
-        try container.encode(pagination, forKey: .pagination)
     }
 
 }

@@ -15,62 +15,58 @@
  **/
 
 import Foundation
+import RestKit
 
 /** Workspace. */
-public struct Workspace {
+public struct Workspace: Decodable {
 
-    /// The name of the workspace.
+    /**
+     The name of the workspace.
+     */
     public var name: String
 
-    /// The language of the workspace.
+    /**
+     The language of the workspace.
+     */
     public var language: String
 
-    /// The timestamp for creation of the workspace.
+    /**
+     The timestamp for creation of the workspace.
+     */
     public var created: String?
 
-    /// The timestamp for the last update to the workspace.
+    /**
+     The timestamp for the last update to the workspace.
+     */
     public var updated: String?
 
-    /// The workspace ID.
+    /**
+     The workspace ID.
+     */
     public var workspaceID: String
 
-    /// The description of the workspace.
+    /**
+     The description of the workspace.
+     */
     public var description: String?
 
-    /// Any metadata related to the workspace.
+    /**
+     Any metadata related to the workspace.
+     */
     public var metadata: [String: JSON]?
 
-    /// Whether training data from the workspace (including artifacts such as intents and entities) can be used by IBM for general service improvements. `true` indicates that workspace training data is not to be used.
+    /**
+     Whether training data from the workspace (including artifacts such as intents and entities) can be used by IBM for
+     general service improvements. `true` indicates that workspace training data is not to be used.
+     */
     public var learningOptOut: Bool?
 
     /**
-     Initialize a `Workspace` with member variables.
+     Global settings for the workspace.
+     */
+    public var systemSettings: WorkspaceSystemSettings?
 
-     - parameter name: The name of the workspace.
-     - parameter language: The language of the workspace.
-     - parameter workspaceID: The workspace ID.
-     - parameter created: The timestamp for creation of the workspace.
-     - parameter updated: The timestamp for the last update to the workspace.
-     - parameter description: The description of the workspace.
-     - parameter metadata: Any metadata related to the workspace.
-     - parameter learningOptOut: Whether training data from the workspace (including artifacts such as intents and entities) can be used by IBM for general service improvements. `true` indicates that workspace training data is not to be used.
-
-     - returns: An initialized `Workspace`.
-    */
-    public init(name: String, language: String, workspaceID: String, created: String? = nil, updated: String? = nil, description: String? = nil, metadata: [String: JSON]? = nil, learningOptOut: Bool? = nil) {
-        self.name = name
-        self.language = language
-        self.workspaceID = workspaceID
-        self.created = created
-        self.updated = updated
-        self.description = description
-        self.metadata = metadata
-        self.learningOptOut = learningOptOut
-    }
-}
-
-extension Workspace: Codable {
-
+    // Map each property name to the key that shall be used for encoding/decoding.
     private enum CodingKeys: String, CodingKey {
         case name = "name"
         case language = "language"
@@ -80,31 +76,7 @@ extension Workspace: Codable {
         case description = "description"
         case metadata = "metadata"
         case learningOptOut = "learning_opt_out"
-        static let allValues = [name, language, created, updated, workspaceID, description, metadata, learningOptOut]
-    }
-
-    public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        name = try container.decode(String.self, forKey: .name)
-        language = try container.decode(String.self, forKey: .language)
-        created = try container.decodeIfPresent(String.self, forKey: .created)
-        updated = try container.decodeIfPresent(String.self, forKey: .updated)
-        workspaceID = try container.decode(String.self, forKey: .workspaceID)
-        description = try container.decodeIfPresent(String.self, forKey: .description)
-        metadata = try container.decodeIfPresent([String: JSON].self, forKey: .metadata)
-        learningOptOut = try container.decodeIfPresent(Bool.self, forKey: .learningOptOut)
-    }
-
-    public func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(name, forKey: .name)
-        try container.encode(language, forKey: .language)
-        try container.encodeIfPresent(created, forKey: .created)
-        try container.encodeIfPresent(updated, forKey: .updated)
-        try container.encode(workspaceID, forKey: .workspaceID)
-        try container.encodeIfPresent(description, forKey: .description)
-        try container.encodeIfPresent(metadata, forKey: .metadata)
-        try container.encodeIfPresent(learningOptOut, forKey: .learningOptOut)
+        case systemSettings = "system_settings"
     }
 
 }

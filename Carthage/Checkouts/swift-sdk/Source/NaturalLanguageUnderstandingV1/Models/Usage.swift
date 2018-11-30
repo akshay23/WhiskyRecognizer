@@ -16,55 +16,31 @@
 
 import Foundation
 
-/** Usage information. */
-public struct Usage {
-
-    /// Number of features used in the API call.
-    public var features: Int?
-
-    /// Number of text characters processed.
-    public var textCharacters: Int?
-
-    /// Number of 10,000-character units processed.
-    public var textUnits: Int?
+/**
+ Usage information.
+ */
+public struct Usage: Decodable {
 
     /**
-     Initialize a `Usage` with member variables.
+     Number of features used in the API call.
+     */
+    public var features: Int?
 
-     - parameter features: Number of features used in the API call.
-     - parameter textCharacters: Number of text characters processed.
-     - parameter textUnits: Number of 10,000-character units processed.
+    /**
+     Number of text characters processed.
+     */
+    public var textCharacters: Int?
 
-     - returns: An initialized `Usage`.
-    */
-    public init(features: Int? = nil, textCharacters: Int? = nil, textUnits: Int? = nil) {
-        self.features = features
-        self.textCharacters = textCharacters
-        self.textUnits = textUnits
-    }
-}
+    /**
+     Number of 10,000-character units processed.
+     */
+    public var textUnits: Int?
 
-extension Usage: Codable {
-
+    // Map each property name to the key that shall be used for encoding/decoding.
     private enum CodingKeys: String, CodingKey {
         case features = "features"
         case textCharacters = "text_characters"
         case textUnits = "text_units"
-        static let allValues = [features, textCharacters, textUnits]
-    }
-
-    public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        features = try container.decodeIfPresent(Int.self, forKey: .features)
-        textCharacters = try container.decodeIfPresent(Int.self, forKey: .textCharacters)
-        textUnits = try container.decodeIfPresent(Int.self, forKey: .textUnits)
-    }
-
-    public func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encodeIfPresent(features, forKey: .features)
-        try container.encodeIfPresent(textCharacters, forKey: .textCharacters)
-        try container.encodeIfPresent(textUnits, forKey: .textUnits)
     }
 
 }

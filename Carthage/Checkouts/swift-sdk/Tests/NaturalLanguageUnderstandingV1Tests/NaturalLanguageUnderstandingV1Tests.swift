@@ -14,11 +14,12 @@
  * limitations under the License.
  **/
 
-// swiftlint:disable function_body_length force_try force_unwrapping superfluous_disable_command
+// swiftlint:disable function_body_length force_try force_unwrapping file_length
 
 import XCTest
 import Foundation
 import NaturalLanguageUnderstandingV1
+import RestKit
 
 class NaturalLanguageUnderstandingTests: XCTestCase {
 
@@ -58,24 +59,32 @@ class NaturalLanguageUnderstandingTests: XCTestCase {
 
     /** Instantiate Natural Language Understanding instance. */
     func instantiateNaturalLanguageUnderstanding() {
-        let username = Credentials.NaturalLanguageUnderstandingUsername
-        let password = Credentials.NaturalLanguageUnderstandingPassword
-        naturalLanguageUnderstanding = NaturalLanguageUnderstanding(username: username, password: password, version: "2016-05-17")
+        let version = "2018-11-01"
+        if let apiKey = WatsonCredentials.NaturalLanguageUnderstandingAPIKey {
+            naturalLanguageUnderstanding = NaturalLanguageUnderstanding(version: version, apiKey: apiKey)
+        } else {
+            let username = WatsonCredentials.NaturalLanguageUnderstandingUsername
+            let password = WatsonCredentials.NaturalLanguageUnderstandingPassword
+            naturalLanguageUnderstanding = NaturalLanguageUnderstanding(username: username, password: password, version: version)
+        }
+        if let url = WatsonCredentials.NaturalLanguageUnderstandingURL {
+            naturalLanguageUnderstanding.serviceURL = url
+        }
         naturalLanguageUnderstanding.defaultHeaders["X-Watson-Learning-Opt-Out"] = "true"
         naturalLanguageUnderstanding.defaultHeaders["X-Watson-Test"] = "true"
     }
 
     func loadHTML() {
-        #if os(iOS)
+        #if os(Linux)
+            let file = URL(fileURLWithPath: "Tests/NaturalLanguageUnderstandingV1Tests/testArticle.html").path
+            html = try! String(contentsOfFile: file, encoding: .utf8)
+        #else
             let bundle = Bundle(for: type(of: self))
             guard let file = bundle.path(forResource: "testArticle", ofType: "html") else {
                 XCTFail("Unable to locate testArticle.html")
                 return
             }
-            html = try! String(contentsOfFile: file)
-        #else
-            let file = URL(fileURLWithPath: "Tests/NaturalLanguageUnderstandingV1Tests/testArticle.html").path
-            html = try! String(contentsOfFile: file, encoding: .utf8)
+        html = try! String(contentsOfFile: file)
         #endif
     }
 
@@ -206,7 +215,10 @@ class NaturalLanguageUnderstandingTests: XCTestCase {
     func testAnalyzeTextForEmotions() {
         let description = "Analyze text for emotions."
         let expectation = self.expectation(description: description)
-        let text = "But I believe this thinking is wrong. I believe the road of true democracy remains the better path. I believe that in the 21st century, economies can only grow to a certain point until they need to open up -- because entrepreneurs need to access information in order to invent; young people need a global education in order to thrive; independent media needs to check the abuses of power."
+        let text = "But I believe this thinking is wrong. I believe the road of true democracy remains the better path. "
+                 + "I believe that in the 21st century, economies can only grow to a certain point until they need to open up -- "
+                 + "because entrepreneurs need to access information in order to invent; young people need a global education "
+                 + "in order to thrive; independent media needs to check the abuses of power."
         let emotion = EmotionOptions(targets: ["democracy", "entrepreneurs", "media", "economies"])
         let features = Features(emotion: emotion)
         let parameters = Parameters(features: features, text: text, returnAnalyzedText: true)
@@ -244,7 +256,10 @@ class NaturalLanguageUnderstandingTests: XCTestCase {
     func testAnalyzeTextForEmotionsWithoutTargets() {
         let description = "Analyze text for emotions without targets."
         let expectation = self.expectation(description: description)
-        let text = "But I believe this thinking is wrong. I believe the road of true democracy remains the better path. I believe that in the 21st century, economies can only grow to a certain point until they need to open up -- because entrepreneurs need to access information in order to invent; young people need a global education in order to thrive; independent media needs to check the abuses of power."
+        let text = "But I believe this thinking is wrong. I believe the road of true democracy remains the better path. "
+                 + "I believe that in the 21st century, economies can only grow to a certain point until they need to open up -- "
+                 + "because entrepreneurs need to access information in order to invent; young people need a global education "
+                 + "in order to thrive; independent media needs to check the abuses of power."
         let features = Features(emotion: EmotionOptions())
         let parameters = Parameters(features: features, text: text, returnAnalyzedText: true)
         naturalLanguageUnderstanding.analyze(parameters: parameters, failure: failWithError) {
@@ -475,10 +490,7 @@ class NaturalLanguageUnderstandingTests: XCTestCase {
     func testDeleteModel() {
         let description = "Delete an invalid model."
         let expectation = self.expectation(description: description)
-        let failure = { (error: Error) in
-            XCTAssert(error.localizedDescription.contains("invalid model_id"))
-            expectation.fulfill()
-        }
+        let failure = { (error: Error) in expectation.fulfill() }
         naturalLanguageUnderstanding.deleteModel(modelID: "invalid_model_id", failure: failure, success: failWithResult)
         waitForExpectations()
     }
@@ -490,6 +502,6 @@ class NaturalLanguageUnderstandingTests: XCTestCase {
             XCTAssertNotNil(results.models)
             expectation.fulfill()
         }
-        waitForExpectations(timeout: 10)
+        waitForExpectations(timeout: 20)
     }
 }

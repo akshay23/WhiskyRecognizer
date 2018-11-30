@@ -17,46 +17,22 @@
 import Foundation
 
 /** TargetedSentimentResults. */
-public struct TargetedSentimentResults {
-
-    /// Targeted text.
-    public var text: String?
-
-    /// Sentiment score from -1 (negative) to 1 (positive).
-    public var score: Double?
+public struct TargetedSentimentResults: Decodable {
 
     /**
-     Initialize a `TargetedSentimentResults` with member variables.
+     Targeted text.
+     */
+    public var text: String?
 
-     - parameter text: Targeted text.
-     - parameter score: Sentiment score from -1 (negative) to 1 (positive).
+    /**
+     Sentiment score from -1 (negative) to 1 (positive).
+     */
+    public var score: Double?
 
-     - returns: An initialized `TargetedSentimentResults`.
-    */
-    public init(text: String? = nil, score: Double? = nil) {
-        self.text = text
-        self.score = score
-    }
-}
-
-extension TargetedSentimentResults: Codable {
-
+    // Map each property name to the key that shall be used for encoding/decoding.
     private enum CodingKeys: String, CodingKey {
         case text = "text"
         case score = "score"
-        static let allValues = [text, score]
-    }
-
-    public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        text = try container.decodeIfPresent(String.self, forKey: .text)
-        score = try container.decodeIfPresent(Double.self, forKey: .score)
-    }
-
-    public func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encodeIfPresent(text, forKey: .text)
-        try container.encodeIfPresent(score, forKey: .score)
     }
 
 }

@@ -55,5 +55,5 @@ extension BaseNavigationController where Self: UINavigationController {
 extension UINavigationController: BaseNavigationController {
     var visibleController: BaseController? { return self.visibleViewController }
     var controllers: [BaseController] { return self.viewControllers }
-    var childControllers: [BaseController] { return self.childViewControllers }
+    var childControllers: [BaseController] { return self.children }
 }

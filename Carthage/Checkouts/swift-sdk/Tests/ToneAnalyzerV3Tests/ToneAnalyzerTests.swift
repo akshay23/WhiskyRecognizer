@@ -14,7 +14,7 @@
  * limitations under the License.
  **/
 
-// swiftlint:disable function_body_length force_try force_unwrapping superfluous_disable_command
+// swiftlint:disable function_body_length force_try force_unwrapping file_length
 
 import XCTest
 import Foundation
@@ -26,7 +26,9 @@ class ToneAnalyzerTests: XCTestCase {
 
     static var allTests: [(String, (ToneAnalyzerTests) -> () throws -> Void)] {
         return [
-            ("testGetTone", testGetTone),
+            ("testGetToneJSON", testGetToneJSON),
+            ("testGetTonePlainText", testGetTonePlainText),
+            ("testGetToneHTML", testGetToneHTML),
             ("testGetToneCustom", testGetToneCustom),
             ("testToneChat", testToneChat),
             ("testGetToneEmptyString", testGetToneEmptyString),
@@ -59,9 +61,17 @@ class ToneAnalyzerTests: XCTestCase {
 
     /** Instantiate Tone Analyzer. */
     func instantiateToneAnalyzer() {
-        let username = Credentials.ToneAnalyzerUsername
-        let password = Credentials.ToneAnalyzerPassword
-        toneAnalyzer = ToneAnalyzer(username: username, password: password, version: "2017-09-21")
+        let version = "2018-11-01"
+        if let apiKey = WatsonCredentials.ToneAnalyzerAPIKey {
+            toneAnalyzer = ToneAnalyzer(version: version, apiKey: apiKey)
+        } else {
+            let username = WatsonCredentials.ToneAnalyzerUsername
+            let password = WatsonCredentials.ToneAnalyzerPassword
+            toneAnalyzer = ToneAnalyzer(username: username, password: password, version: version)
+        }
+        if let url = WatsonCredentials.ToneAnalyzerURL {
+            toneAnalyzer.serviceURL = url
+        }
         toneAnalyzer.defaultHeaders["X-Watson-Learning-Opt-Out"] = "true"
         toneAnalyzer.defaultHeaders["X-Watson-Test"] = "true"
     }
@@ -90,9 +100,9 @@ class ToneAnalyzerTests: XCTestCase {
 
     // MARK: - Positive Tests
 
-    func testGetTone() {
+    func testGetToneJSON() {
         let expectation = self.expectation(description: "Get tone.")
-        toneAnalyzer.tone(toneInput: ToneInput(text: text), contentType: "plain/text", failure: failWithError) {
+        toneAnalyzer.tone(toneInput: ToneInput(text: text), failure: failWithError) {
             toneAnalysis in
             XCTAssertNotNil(toneAnalysis.documentTone.tones)
             XCTAssertGreaterThan(toneAnalysis.documentTone.tones!.count, 0)
@@ -110,11 +120,50 @@ class ToneAnalyzerTests: XCTestCase {
         waitForExpectations()
     }
 
+    func testGetTonePlainText() {
+        let expectation = self.expectation(description: "Get tone.")
+        toneAnalyzer.tone(text: text, failure: failWithError) {
+            toneAnalysis in
+            XCTAssertNotNil(toneAnalysis.documentTone.tones)
+            XCTAssertGreaterThan(toneAnalysis.documentTone.tones!.count, 0)
+            XCTAssertNotNil(toneAnalysis.sentencesTone)
+            XCTAssertGreaterThan(toneAnalysis.sentencesTone!.count, 0)
+            for sentenceAnalysis in toneAnalysis.sentencesTone! {
+                XCTAssertNotNil(sentenceAnalysis.tones)
+                XCTAssertGreaterThan(sentenceAnalysis.tones!.count, 0)
+                XCTAssertNil(sentenceAnalysis.toneCategories)
+                XCTAssertNil(sentenceAnalysis.inputFrom)
+                XCTAssertNil(sentenceAnalysis.inputTo)
+            }
+            expectation.fulfill()
+        }
+        waitForExpectations()
+    }
+
+    func testGetToneHTML() {
+        let expectation = self.expectation(description: "Get tone.")
+        let html = "<!DOCTYPE html><html><body><p>\(text)</p></body></html>"
+        toneAnalyzer.tone(html: html, failure: failWithError) {
+            toneAnalysis in
+            XCTAssertNotNil(toneAnalysis.documentTone.tones)
+            XCTAssertGreaterThan(toneAnalysis.documentTone.tones!.count, 0)
+            XCTAssertNotNil(toneAnalysis.sentencesTone)
+            XCTAssertGreaterThan(toneAnalysis.sentencesTone!.count, 0)
+            for sentenceAnalysis in toneAnalysis.sentencesTone! {
+                XCTAssertNotNil(sentenceAnalysis.tones)
+                XCTAssertNil(sentenceAnalysis.toneCategories)
+                XCTAssertNil(sentenceAnalysis.inputFrom)
+                XCTAssertNil(sentenceAnalysis.inputTo)
+            }
+            expectation.fulfill()
+        }
+        waitForExpectations()
+    }
+
     func testGetToneCustom() {
         let expectation = self.expectation(description: "Get tone with custom parameters.")
         toneAnalyzer.tone(
             toneInput: ToneInput(text: text),
-            contentType: "plain/text",
             sentences: false,
             contentLanguage: "en",
             acceptLanguage: "en",
@@ -132,6 +181,7 @@ class ToneAnalyzerTests: XCTestCase {
     func testToneChat() {
         let expectation = self.expectation(description: "Tone chat.")
         toneAnalyzer.toneChat(utterances: utterances, acceptLanguage: "en", failure: failWithError) { analyses in
+            XCTAssert(!analyses.utterancesTone.isEmpty)
             expectation.fulfill()
         }
         waitForExpectations()
@@ -142,12 +192,7 @@ class ToneAnalyzerTests: XCTestCase {
     func testGetToneEmptyString() {
         let expectation = self.expectation(description: "Get tone with an empty string.")
         let failure = { (error: Error) in expectation.fulfill() }
-        toneAnalyzer.tone(
-            toneInput: ToneInput(text: ""),
-            contentType: "plain/text",
-            failure: failure,
-            success: failWithResult
-        )
+        toneAnalyzer.tone(toneInput: ToneInput(text: ""), failure: failure, success: failWithResult)
         waitForExpectations()
     }
 

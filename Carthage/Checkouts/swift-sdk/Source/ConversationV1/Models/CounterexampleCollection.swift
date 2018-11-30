@@ -17,46 +17,22 @@
 import Foundation
 
 /** CounterexampleCollection. */
-public struct CounterexampleCollection {
-
-    /// An array of objects describing the examples marked as irrelevant input.
-    public var counterexamples: [Counterexample]
-
-    /// The pagination data for the returned objects.
-    public var pagination: Pagination
+public struct CounterexampleCollection: Decodable {
 
     /**
-     Initialize a `CounterexampleCollection` with member variables.
+     An array of objects describing the examples marked as irrelevant input.
+     */
+    public var counterexamples: [Counterexample]
 
-     - parameter counterexamples: An array of objects describing the examples marked as irrelevant input.
-     - parameter pagination: The pagination data for the returned objects.
+    /**
+     The pagination data for the returned objects.
+     */
+    public var pagination: Pagination
 
-     - returns: An initialized `CounterexampleCollection`.
-    */
-    public init(counterexamples: [Counterexample], pagination: Pagination) {
-        self.counterexamples = counterexamples
-        self.pagination = pagination
-    }
-}
-
-extension CounterexampleCollection: Codable {
-
+    // Map each property name to the key that shall be used for encoding/decoding.
     private enum CodingKeys: String, CodingKey {
         case counterexamples = "counterexamples"
         case pagination = "pagination"
-        static let allValues = [counterexamples, pagination]
-    }
-
-    public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        counterexamples = try container.decode([Counterexample].self, forKey: .counterexamples)
-        pagination = try container.decode(Pagination.self, forKey: .pagination)
-    }
-
-    public func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(counterexamples, forKey: .counterexamples)
-        try container.encode(pagination, forKey: .pagination)
     }
 
 }

@@ -14,7 +14,7 @@
  * limitations under the License.
  **/
 
-// swiftlint:disable function_body_length force_try force_unwrapping superfluous_disable_command
+// swiftlint:disable function_body_length force_try force_unwrapping file_length
 
 import XCTest
 import PersonalityInsightsV3
@@ -31,6 +31,9 @@ class PersonalityInsightsTests: XCTestCase {
             ("testProfileText", testProfileText),
             ("testProfileHTML", testProfileHTML),
             ("testProfileContent", testProfileContent),
+            ("testProfileAsCsvText", testProfileAsCsvText),
+            ("testProfileAsCsvContent", testProfileAsCsvContent),
+            ("testProfileAsCsvText", testProfileAsCsvText),
             ("testNeedsAndConsumptionPreferences", testNeedsAndConsumptionPreferences),
             ("testProfileWithShortText", testProfileWithShortText),
         ]
@@ -46,24 +49,32 @@ class PersonalityInsightsTests: XCTestCase {
     }
 
     func instantiatePersonalityInsights() {
-        let username = Credentials.PersonalityInsightsV3Username
-        let password = Credentials.PersonalityInsightsV3Password
-        personalityInsights = PersonalityInsights(username: username, password: password, version: "2016-10-20")
+        let version = "2018-11-01"
+        if let apiKey = WatsonCredentials.PersonalityInsightsV3APIKey {
+            personalityInsights = PersonalityInsights(version: version, apiKey: apiKey)
+        } else {
+            let username = WatsonCredentials.PersonalityInsightsV3Username
+            let password = WatsonCredentials.PersonalityInsightsV3Password
+            personalityInsights = PersonalityInsights(username: username, password: password, version: version)
+        }
+        if let url = WatsonCredentials.PersonalityInsightsV3URL {
+            personalityInsights.serviceURL = url
+        }
         personalityInsights.defaultHeaders["X-Watson-Learning-Opt-Out"] = "true"
         personalityInsights.defaultHeaders["X-Watson-Test"] = "true"
     }
 
     func load(forResource resource: String, ofType ext: String) -> String? {
-        #if os(iOS)
+        #if os(Linux)
+            let file = URL(fileURLWithPath: "Tests/PersonalityInsightsV3Tests/" + resource + "." + ext).path
+            return try? String(contentsOfFile: file, encoding: .utf8)
+        #else
             let bundle = Bundle(for: type(of: self))
             guard let file = bundle.path(forResource: resource, ofType: ext) else {
                 XCTFail("Unable to locate \(resource).\(ext) file.")
                 return nil
             }
             return try? String(contentsOfFile: file)
-        #else
-            let file = URL(fileURLWithPath: "Tests/PersonalityInsightsV3Tests/" + resource + "." + ext).path
-            return try? String(contentsOfFile: file, encoding: .utf8)
         #endif
     }
 

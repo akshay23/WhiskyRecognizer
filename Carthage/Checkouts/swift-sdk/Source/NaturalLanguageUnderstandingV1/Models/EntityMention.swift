@@ -17,46 +17,22 @@
 import Foundation
 
 /** EntityMention. */
-public struct EntityMention {
-
-    /// Entity mention text.
-    public var text: String?
-
-    /// Character offsets indicating the beginning and end of the mention in the analyzed text.
-    public var location: [Int]?
+public struct EntityMention: Decodable {
 
     /**
-     Initialize a `EntityMention` with member variables.
+     Entity mention text.
+     */
+    public var text: String?
 
-     - parameter text: Entity mention text.
-     - parameter location: Character offsets indicating the beginning and end of the mention in the analyzed text.
+    /**
+     Character offsets indicating the beginning and end of the mention in the analyzed text.
+     */
+    public var location: [Int]?
 
-     - returns: An initialized `EntityMention`.
-    */
-    public init(text: String? = nil, location: [Int]? = nil) {
-        self.text = text
-        self.location = location
-    }
-}
-
-extension EntityMention: Codable {
-
+    // Map each property name to the key that shall be used for encoding/decoding.
     private enum CodingKeys: String, CodingKey {
         case text = "text"
         case location = "location"
-        static let allValues = [text, location]
-    }
-
-    public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        text = try container.decodeIfPresent(String.self, forKey: .text)
-        location = try container.decodeIfPresent([Int].self, forKey: .location)
-    }
-
-    public func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encodeIfPresent(text, forKey: .text)
-        try container.encodeIfPresent(location, forKey: .location)
     }
 
 }

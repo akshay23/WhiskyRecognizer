@@ -16,47 +16,44 @@
 
 import Foundation
 
-/** An option specifying if sentiment of detected entities, keywords, or phrases should be returned. */
-public struct SentimentOptions {
+/**
+ Analyzes the general sentiment of your content or the sentiment toward specific target phrases. You can analyze
+ sentiment for detected entities with `entities.sentiment` and for keywords with `keywords.sentiment`.
+  Supported languages: Arabic, English, French, German, Italian, Japanese, Korean, Portuguese, Russian, Spanish.
+ */
+public struct SentimentOptions: Encodable {
 
-    /// Set this to false to hide document-level sentiment results.
+    /**
+     Set this to `false` to hide document-level sentiment results.
+     */
     public var document: Bool?
 
-    /// Sentiment results will be returned for each target string that is found in the document.
+    /**
+     Sentiment results will be returned for each target string that is found in the document.
+     */
     public var targets: [String]?
+
+    // Map each property name to the key that shall be used for encoding/decoding.
+    private enum CodingKeys: String, CodingKey {
+        case document = "document"
+        case targets = "targets"
+    }
 
     /**
      Initialize a `SentimentOptions` with member variables.
 
-     - parameter document: Set this to false to hide document-level sentiment results.
+     - parameter document: Set this to `false` to hide document-level sentiment results.
      - parameter targets: Sentiment results will be returned for each target string that is found in the document.
 
      - returns: An initialized `SentimentOptions`.
     */
-    public init(document: Bool? = nil, targets: [String]? = nil) {
+    public init(
+        document: Bool? = nil,
+        targets: [String]? = nil
+    )
+    {
         self.document = document
         self.targets = targets
-    }
-}
-
-extension SentimentOptions: Codable {
-
-    private enum CodingKeys: String, CodingKey {
-        case document = "document"
-        case targets = "targets"
-        static let allValues = [document, targets]
-    }
-
-    public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        document = try container.decodeIfPresent(Bool.self, forKey: .document)
-        targets = try container.decodeIfPresent([String].self, forKey: .targets)
-    }
-
-    public func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encodeIfPresent(document, forKey: .document)
-        try container.encodeIfPresent(targets, forKey: .targets)
     }
 
 }

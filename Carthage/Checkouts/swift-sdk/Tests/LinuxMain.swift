@@ -1,9 +1,10 @@
 import XCTest
 
 @testable import AssistantV1Tests
+@testable import AssistantV2Tests
 @testable import ConversationV1Tests
 @testable import DiscoveryV1Tests
-@testable import LanguageTranslatorV2Tests
+@testable import LanguageTranslatorV3Tests
 @testable import NaturalLanguageClassifierV1Tests
 @testable import NaturalLanguageUnderstandingV1Tests
 @testable import PersonalityInsightsV3Tests
@@ -17,6 +18,7 @@ import XCTest
 
 XCTMain([
     testCase(AssistantTests.allTests),
+    testCase(AssistantV2Tests.allTests),
     testCase(ConversationTests.allTests),
     testCase(DiscoveryTests.allTests),
     testCase(LanguageTranslatorTests.allTests),

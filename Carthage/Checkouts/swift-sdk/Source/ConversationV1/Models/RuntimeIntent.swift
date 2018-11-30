@@ -15,18 +15,32 @@
  **/
 
 import Foundation
+import RestKit
 
-/** An intent identified in the user input. */
-public struct RuntimeIntent {
+/**
+ An intent identified in the user input.
+ */
+public struct RuntimeIntent: Codable {
 
-    /// The name of the recognized intent.
+    /**
+     The name of the recognized intent.
+     */
     public var intent: String
 
-    /// A decimal percentage that represents Watson's confidence in the intent.
+    /**
+     A decimal percentage that represents Watson's confidence in the intent.
+     */
     public var confidence: Double
 
     /// Additional properties associated with this model.
     public var additionalProperties: [String: JSON]
+
+    // Map each property name to the key that shall be used for encoding/decoding.
+    private enum CodingKeys: String, CodingKey {
+        case intent = "intent"
+        case confidence = "confidence"
+        static let allValues = [intent, confidence]
+    }
 
     /**
      Initialize a `RuntimeIntent` with member variables.
@@ -36,19 +50,15 @@ public struct RuntimeIntent {
 
      - returns: An initialized `RuntimeIntent`.
     */
-    public init(intent: String, confidence: Double, additionalProperties: [String: JSON] = [:]) {
+    public init(
+        intent: String,
+        confidence: Double,
+        additionalProperties: [String: JSON] = [:]
+    )
+    {
         self.intent = intent
         self.confidence = confidence
         self.additionalProperties = additionalProperties
-    }
-}
-
-extension RuntimeIntent: Codable {
-
-    private enum CodingKeys: String, CodingKey {
-        case intent = "intent"
-        case confidence = "confidence"
-        static let allValues = [intent, confidence]
     }
 
     public init(from decoder: Decoder) throws {

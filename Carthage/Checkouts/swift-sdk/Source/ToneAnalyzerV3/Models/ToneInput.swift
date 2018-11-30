@@ -17,10 +17,17 @@
 import Foundation
 
 /** ToneInput. */
-public struct ToneInput {
+public struct ToneInput: Encodable {
 
-    /// The input content that the service is to analyze.
+    /**
+     The input content that the service is to analyze.
+     */
     public var text: String
+
+    // Map each property name to the key that shall be used for encoding/decoding.
+    private enum CodingKeys: String, CodingKey {
+        case text = "text"
+    }
 
     /**
      Initialize a `ToneInput` with member variables.
@@ -29,26 +36,11 @@ public struct ToneInput {
 
      - returns: An initialized `ToneInput`.
     */
-    public init(text: String) {
+    public init(
+        text: String
+    )
+    {
         self.text = text
-    }
-}
-
-extension ToneInput: Codable {
-
-    private enum CodingKeys: String, CodingKey {
-        case text = "text"
-        static let allValues = [text]
-    }
-
-    public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        text = try container.decode(String.self, forKey: .text)
-    }
-
-    public func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(text, forKey: .text)
     }
 
 }

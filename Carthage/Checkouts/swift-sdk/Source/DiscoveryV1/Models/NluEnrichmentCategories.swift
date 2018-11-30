@@ -15,8 +15,11 @@
  **/
 
 import Foundation
+import RestKit
 
-/** An object that indicates the Categories enrichment will be applied to the specified field. */
+/**
+ An object that indicates the Categories enrichment will be applied to the specified field.
+ */
 public struct NluEnrichmentCategories: Codable {
 
     /// Additional properties associated with this model.
@@ -27,7 +30,10 @@ public struct NluEnrichmentCategories: Codable {
 
      - returns: An initialized `NluEnrichmentCategories`.
     */
-    public init(additionalProperties: [String: JSON] = [:]) {
+    public init(
+        additionalProperties: [String: JSON] = [:]
+    )
+    {
         self.additionalProperties = additionalProperties
     }
 

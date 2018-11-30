@@ -16,71 +16,75 @@
 
 import Foundation
 
-/** Whether or not to return important people, places, geopolitical, and other entities detected in the analyzed content. */
-public struct EntitiesOptions {
-
-    /// Maximum number of entities to return.
-    public var limit: Int?
-
-    /// Set this to true to return locations of entity mentions.
-    public var mentions: Bool?
-
-    /// Enter a custom model ID to override the standard entity detection model.
-    public var model: String?
-
-    /// Set this to true to return sentiment information for detected entities.
-    public var sentiment: Bool?
-
-    /// Set this to true to analyze emotion for detected keywords.
-    public var emotion: Bool?
+/**
+ Identifies people, cities, organizations, and other entities in the content. See [Entity types and
+ subtypes](/docs/services/natural-language-understanding/entity-types.html).
+ Supported languages: English, French, German, Italian, Japanese, Korean, Portuguese, Russian, Spanish, Swedish. Arabic,
+ Chinese, and Dutch custom models are also supported.
+ */
+public struct EntitiesOptions: Encodable {
 
     /**
-     Initialize a `EntitiesOptions` with member variables.
+     Maximum number of entities to return.
+     */
+    public var limit: Int?
 
-     - parameter limit: Maximum number of entities to return.
-     - parameter mentions: Set this to true to return locations of entity mentions.
-     - parameter model: Enter a custom model ID to override the standard entity detection model.
-     - parameter sentiment: Set this to true to return sentiment information for detected entities.
-     - parameter emotion: Set this to true to analyze emotion for detected keywords.
+    /**
+     Set this to `true` to return locations of entity mentions.
+     */
+    public var mentions: Bool?
 
-     - returns: An initialized `EntitiesOptions`.
-    */
-    public init(limit: Int? = nil, mentions: Bool? = nil, model: String? = nil, sentiment: Bool? = nil, emotion: Bool? = nil) {
-        self.limit = limit
-        self.mentions = mentions
-        self.model = model
-        self.sentiment = sentiment
-        self.emotion = emotion
-    }
-}
+    /**
+     Enter a [custom model](https://www.bluemix.net/docs/services/natural-language-understanding/customizing.html) ID to
+     override the standard entity detection model.
+     */
+    public var model: String?
 
-extension EntitiesOptions: Codable {
+    /**
+     Set this to `true` to return sentiment information for detected entities.
+     */
+    public var sentiment: Bool?
 
+    /**
+     Set this to `true` to analyze emotion for detected keywords.
+     */
+    public var emotion: Bool?
+
+    // Map each property name to the key that shall be used for encoding/decoding.
     private enum CodingKeys: String, CodingKey {
         case limit = "limit"
         case mentions = "mentions"
         case model = "model"
         case sentiment = "sentiment"
         case emotion = "emotion"
-        static let allValues = [limit, mentions, model, sentiment, emotion]
     }
 
-    public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        limit = try container.decodeIfPresent(Int.self, forKey: .limit)
-        mentions = try container.decodeIfPresent(Bool.self, forKey: .mentions)
-        model = try container.decodeIfPresent(String.self, forKey: .model)
-        sentiment = try container.decodeIfPresent(Bool.self, forKey: .sentiment)
-        emotion = try container.decodeIfPresent(Bool.self, forKey: .emotion)
-    }
+    /**
+     Initialize a `EntitiesOptions` with member variables.
 
-    public func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encodeIfPresent(limit, forKey: .limit)
-        try container.encodeIfPresent(mentions, forKey: .mentions)
-        try container.encodeIfPresent(model, forKey: .model)
-        try container.encodeIfPresent(sentiment, forKey: .sentiment)
-        try container.encodeIfPresent(emotion, forKey: .emotion)
+     - parameter limit: Maximum number of entities to return.
+     - parameter mentions: Set this to `true` to return locations of entity mentions.
+     - parameter model: Enter a [custom
+       model](https://www.bluemix.net/docs/services/natural-language-understanding/customizing.html) ID to override the
+       standard entity detection model.
+     - parameter sentiment: Set this to `true` to return sentiment information for detected entities.
+     - parameter emotion: Set this to `true` to analyze emotion for detected keywords.
+
+     - returns: An initialized `EntitiesOptions`.
+    */
+    public init(
+        limit: Int? = nil,
+        mentions: Bool? = nil,
+        model: String? = nil,
+        sentiment: Bool? = nil,
+        emotion: Bool? = nil
+    )
+    {
+        self.limit = limit
+        self.mentions = mentions
+        self.model = model
+        self.sentiment = sentiment
+        self.emotion = emotion
     }
 
 }
