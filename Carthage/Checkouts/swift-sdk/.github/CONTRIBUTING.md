@@ -11,25 +11,32 @@ See the [issue template](issue_template.md).
 # Coding Style
 
 Contributions should follow the established coding style and conventions for this project,
-which are loosely based on [GitHub's Swift Style Guide][styleguide].
+which are loosely based on [The Official raywenderlich.com Swift Style Guide][styleguide]
+and [Swift API Design Guidelines][api-guidelines].
 The project is set up so that developers can use [SwiftLint][swiftlint] to check conformance
 to the coding style guidelines.
 
-[styleguide]: https://github.com/github/swift-style-guide
+[styleguide]: https://github.com/raywenderlich/swift-style-guide
+[api-guidelines]: https://swift.org/documentation/api-design-guidelines
 [swiftlint]: https://github.com/realm/SwiftLint
 
 # Pull Requests
 
 If you want to contribute to the repository, here's a quick guide:
   1. Fork the repository.
-  2. Copy `CredentialsExample.plist` to `Credentials.plist`.
-  3. Add credentials to `Credentials.plist` for the services you plan to test.
-  4. Develop and test your code changes.
-    * Please respect the original code [style guide][styleguide].
-    * Create minimal diffs - disable on save actions like reformat source code or organize imports. If you feel the source code should be reformatted create a separate PR for this change.
-    * Check for unnecessary whitespace with `git diff --check` before committing.
-  5. Verify that tests pass successfully. Instructions on running the Swift tests on Linux while on a Mac can be found [here](https://github.com/watson-developer-cloud/swift-sdk/wiki/Running-Swift-Linux-Tests-on-Mac).
-  6. Push to your fork and submit a pull request to the **master** branch.
+  1. Copy `Source/SupportingFiles/WatsonCredentialsExample.swift` to `Source/SupportingFiles/WatsonCredentials.swift`.
+  1. Add credentials to `WatsonCredentials.swift` for the services you plan to test.
+  1. Develop and test your code changes.
+      1. Please respect the original code [style guide][styleguide].
+      1. Create minimal diffs - disable on save actions like reformat source code or organize imports. If you feel the source code should be reformatted create a separate PR for this change.
+      1. Check for unnecessary whitespace with `git diff --check` before committing.
+      1. Use [commitizen](https://github.com/commitizen/cz-cli) to make commits (i.e. `git cz` instead of `git commit`).
+      ```
+    	npm install -g commitizen cz-conventional-changelog
+	    echo '{ "path": "cz-conventional-changelog" }' > ~/.czrc
+    	```
+  1. Verify that tests pass successfully on both macOS and Linux. To run tests in Xcode, select the service's scheme and press `cmd-u`. Instructions on running the Swift tests on Linux while on a Mac can be found [here](https://github.com/watson-developer-cloud/swift-sdk/wiki/Running-Swift-Linux-Tests-on-Mac).
+  1. Push to your fork and submit a pull request to the **develop** branch.
 
 # Developer's Certificate of Origin 1.1
 
@@ -64,7 +71,6 @@ By making a contribution to this project, I certify that:
 
 [dw]: https://developer.ibm.com/answers/questions/ask/?topics=watson
 [stackoverflow]: http://stackoverflow.com/questions/ask?tags=ibm-watson
-[styleguide]: https://github.com/IBM-MIL/swift-style-guide
 
 ---
 

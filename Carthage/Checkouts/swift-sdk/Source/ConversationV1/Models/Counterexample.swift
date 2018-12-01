@@ -17,54 +17,28 @@
 import Foundation
 
 /** Counterexample. */
-public struct Counterexample {
-
-    /// The text of the counterexample.
-    public var text: String
-
-    /// The timestamp for creation of the counterexample.
-    public var created: String?
-
-    /// The timestamp for the last update to the counterexample.
-    public var updated: String?
+public struct Counterexample: Decodable {
 
     /**
-     Initialize a `Counterexample` with member variables.
+     The text of the counterexample.
+     */
+    public var text: String
 
-     - parameter text: The text of the counterexample.
-     - parameter created: The timestamp for creation of the counterexample.
-     - parameter updated: The timestamp for the last update to the counterexample.
+    /**
+     The timestamp for creation of the counterexample.
+     */
+    public var created: String?
 
-     - returns: An initialized `Counterexample`.
-    */
-    public init(text: String, created: String? = nil, updated: String? = nil) {
-        self.text = text
-        self.created = created
-        self.updated = updated
-    }
-}
+    /**
+     The timestamp for the last update to the counterexample.
+     */
+    public var updated: String?
 
-extension Counterexample: Codable {
-
+    // Map each property name to the key that shall be used for encoding/decoding.
     private enum CodingKeys: String, CodingKey {
         case text = "text"
         case created = "created"
         case updated = "updated"
-        static let allValues = [text, created, updated]
-    }
-
-    public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        text = try container.decode(String.self, forKey: .text)
-        created = try container.decodeIfPresent(String.self, forKey: .created)
-        updated = try container.decodeIfPresent(String.self, forKey: .updated)
-    }
-
-    public func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(text, forKey: .text)
-        try container.encodeIfPresent(created, forKey: .created)
-        try container.encodeIfPresent(updated, forKey: .updated)
     }
 
 }
