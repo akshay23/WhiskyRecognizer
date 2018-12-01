@@ -52,6 +52,7 @@ protocol CoordinatorDelegate: class {
     // Pop scene from navigation stack or dismiss current modal
     @discardableResult
     func pop(animated: Bool) -> Completable
+    
     func popToRoot(animated: Bool)
 }
 

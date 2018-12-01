@@ -14,27 +14,14 @@
 		190EFF77208E0F7400749D2B /* BaseController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 190EFF74208E0F7400749D2B /* BaseController.swift */; };
 		190EFF78208E0F7400749D2B /* CoordinatorDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 190EFF75208E0F7400749D2B /* CoordinatorDelegate.swift */; };
 		190EFF7A208E0FD900749D2B /* BindableType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 190EFF79208E0FD900749D2B /* BindableType.swift */; };
+		191961B221B2FB7D00008CAF /* RestKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 191961B121B2FB7D00008CAF /* RestKit.framework */; };
+		191961B421B332E000008CAF /* WhiskyRecognizerModel.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 191961B321B332E000008CAF /* WhiskyRecognizerModel.mlmodel */; };
 		19BB3635208E19B400222757 /* HomeScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BB3634208E19B400222757 /* HomeScene.swift */; };
 		19BB3637208E19BD00222757 /* HomeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BB3636208E19BD00222757 /* HomeVC.swift */; };
 		19BB3639208E19C500222757 /* HomeVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BB3638208E19C500222757 /* HomeVM.swift */; };
-		19BB363D208E1F9500222757 /* VisualRecognitionV3.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 19BB363A208E1EDA00222757 /* VisualRecognitionV3.framework */; };
-		19BB363E208E1F9500222757 /* VisualRecognitionV3.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 19BB363A208E1EDA00222757 /* VisualRecognitionV3.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		19DDC65721B2FAC800930CD3 /* VisualRecognitionV3.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 19DDC65621B2FAC800930CD3 /* VisualRecognitionV3.framework */; };
 		2B648B1DC6D21D302AA95DC5 /* Pods_WhiskyRecognizer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7838C11A3E9CB2BD3A6D998C /* Pods_WhiskyRecognizer.framework */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXCopyFilesBuildPhase section */
-		19BB363F208E1F9500222757 /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				19BB363E208E1F9500222757 /* VisualRecognitionV3.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		190EFF5C208E0EE400749D2B /* WhiskyRecognizer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WhiskyRecognizer.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -46,10 +33,12 @@
 		190EFF74208E0F7400749D2B /* BaseController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseController.swift; sourceTree = "<group>"; };
 		190EFF75208E0F7400749D2B /* CoordinatorDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoordinatorDelegate.swift; sourceTree = "<group>"; };
 		190EFF79208E0FD900749D2B /* BindableType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BindableType.swift; sourceTree = "<group>"; };
+		191961B121B2FB7D00008CAF /* RestKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RestKit.framework; path = Carthage/Build/iOS/RestKit.framework; sourceTree = "<group>"; };
+		191961B321B332E000008CAF /* WhiskyRecognizerModel.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = WhiskyRecognizerModel.mlmodel; sourceTree = "<group>"; };
 		19BB3634208E19B400222757 /* HomeScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeScene.swift; sourceTree = "<group>"; };
 		19BB3636208E19BD00222757 /* HomeVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeVC.swift; sourceTree = "<group>"; };
 		19BB3638208E19C500222757 /* HomeVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeVM.swift; sourceTree = "<group>"; };
-		19BB363A208E1EDA00222757 /* VisualRecognitionV3.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VisualRecognitionV3.framework; path = Carthage/Build/iOS/VisualRecognitionV3.framework; sourceTree = "<group>"; };
+		19DDC65621B2FAC800930CD3 /* VisualRecognitionV3.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VisualRecognitionV3.framework; path = Carthage/Build/iOS/VisualRecognitionV3.framework; sourceTree = "<group>"; };
 		7838C11A3E9CB2BD3A6D998C /* Pods_WhiskyRecognizer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_WhiskyRecognizer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D6B08DC4F128189B31A5708D /* Pods-WhiskyRecognizer.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WhiskyRecognizer.debug.xcconfig"; path = "Pods/Target Support Files/Pods-WhiskyRecognizer/Pods-WhiskyRecognizer.debug.xcconfig"; sourceTree = "<group>"; };
 		F550EA5135E829894AF64A49 /* Pods-WhiskyRecognizer.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WhiskyRecognizer.release.xcconfig"; path = "Pods/Target Support Files/Pods-WhiskyRecognizer/Pods-WhiskyRecognizer.release.xcconfig"; sourceTree = "<group>"; };
@@ -60,8 +49,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				19BB363D208E1F9500222757 /* VisualRecognitionV3.framework in Frameworks */,
 				2B648B1DC6D21D302AA95DC5 /* Pods_WhiskyRecognizer.framework in Frameworks */,
+				191961B221B2FB7D00008CAF /* RestKit.framework in Frameworks */,
+				19DDC65721B2FAC800930CD3 /* VisualRecognitionV3.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -91,6 +81,7 @@
 			children = (
 				190EFF72208E0F4800749D2B /* Coordinator */,
 				19BB3633208E19A500222757 /* Home */,
+				196C15E221B2F4630042A8E6 /* Models */,
 				190EFF71208E0F2A00749D2B /* Startup */,
 				190EFF6B208E0EE500749D2B /* Info.plist */,
 			);
@@ -118,6 +109,14 @@
 			path = Coordinator;
 			sourceTree = "<group>";
 		};
+		196C15E221B2F4630042A8E6 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				191961B321B332E000008CAF /* WhiskyRecognizerModel.mlmodel */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
 		19BB3633208E19A500222757 /* Home */ = {
 			isa = PBXGroup;
 			children = (
@@ -140,7 +139,8 @@
 		48F19506A3E6ACAA65F65928 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				19BB363A208E1EDA00222757 /* VisualRecognitionV3.framework */,
+				191961B121B2FB7D00008CAF /* RestKit.framework */,
+				19DDC65621B2FAC800930CD3 /* VisualRecognitionV3.framework */,
 				7838C11A3E9CB2BD3A6D998C /* Pods_WhiskyRecognizer.framework */,
 			);
 			name = Frameworks;
@@ -159,7 +159,6 @@
 				190EFF5A208E0EE400749D2B /* Resources */,
 				0314CA51591EB35385E51080 /* [CP] Embed Pods Frameworks */,
 				19BB363C208E1F1900222757 /* Copy Carthage framework */,
-				19BB363F208E1F9500222757 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -260,13 +259,14 @@
 			);
 			inputPaths = (
 				"$(SRCROOT)/Carthage/Build/iOS/VisualRecognitionV3.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/RestKit.framework",
 			);
 			name = "Copy Carthage framework";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "/usr/local/bin/carthage copy-frameworks";
+			shellScript = "/usr/local/bin/carthage copy-frameworks\n";
 		};
 		E9DE5900C7FB7B499B548F90 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -298,6 +298,7 @@
 				190EFF77208E0F7400749D2B /* BaseController.swift in Sources */,
 				19BB3639208E19C500222757 /* HomeVM.swift in Sources */,
 				190EFF60208E0EE400749D2B /* AppDelegate.swift in Sources */,
+				191961B421B332E000008CAF /* WhiskyRecognizerModel.mlmodel in Sources */,
 				19BB3635208E19B400222757 /* HomeScene.swift in Sources */,
 				190EFF78208E0F7400749D2B /* CoordinatorDelegate.swift in Sources */,
 				190EFF7A208E0FD900749D2B /* BindableType.swift in Sources */,
