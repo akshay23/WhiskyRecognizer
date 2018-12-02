@@ -25,7 +25,8 @@ class HomeVC: UIViewController {
     private var visualRecognition: VisualRecognition!
     
     private let imageView = UIImageView()
-    private var imagePickerButton = UIButton()
+    private var imagePickerButton = UIButton(type: .custom)
+    private let resultsLabel = UILabel()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,8 +36,17 @@ class HomeVC: UIViewController {
         
         view.addSubview(imageView)
         
+        resultsLabel.font = UIFont.boldSystemFont(ofSize: 18)
+        resultsLabel.textColor = .black
+        resultsLabel.textAlignment = .center
+        resultsLabel.numberOfLines = 0
+        view.addSubview(resultsLabel)
+        
+        imagePickerButton.backgroundColor = .black
+        imagePickerButton.layer.borderWidth = 1.0
+        imagePickerButton.layer.cornerRadius = 6.0
         imagePickerButton.setTitle("Pick Image", for: .normal)
-        imagePickerButton.setTitle("Pick Image", for: .highlighted)
+        imagePickerButton.setTitleColor(.blue, for: .highlighted)
         view.addSubview(imagePickerButton)
         
         setupConstraints()
@@ -66,6 +76,12 @@ private extension HomeVC {
             make.width.equalTo(100)
             make.height.equalTo(40)
         }
+        
+        resultsLabel.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.top.equalTo(imagePickerButton.snp.top).offset(60)
+            make.width.equalToSuperview()
+        }
     }
 
     func updateModel() {
@@ -89,15 +105,24 @@ private extension HomeVC {
     
     func classifyImage(for image: UIImage, localThreshold: Double = 0.0) {
         
-        let success = { (classifiedImages: VisualRecognitionV3.ClassifiedImages) in
+        let success = { [weak self] (classifiedImages: VisualRecognitionV3.ClassifiedImages) in
             var topClassification = ""
+            var resultText = "Unable to classify whisky!"
+            
             if classifiedImages.images.count > 0,
                 classifiedImages.images[0].classifiers.count > 0,
                 classifiedImages.images[0].classifiers[0].classes.count > 0 {
                 topClassification = classifiedImages.images[0].classifiers[0].classes[0].className
+                print("Detected whisky is \(topClassification)")
             }
             
-            print("Detected whisky is \(topClassification)")
+            if !topClassification.isEmpty {
+                resultText = "Whisky classified as \(topClassification.capitalizingFirstLetter())"
+            }
+            
+            DispatchQueue.main.async {
+                self?.resultsLabel.text = resultText
+            }
         }
         
         visualRecognition.classifyWithLocalModel(image: image,
@@ -116,7 +141,7 @@ extension HomeVC: UIImagePickerControllerDelegate, UINavigationControllerDelegat
         let image = info[UIImagePickerController.InfoKey.originalImage] as! UIImage
         imageView.contentMode = UIView.ContentMode.scaleAspectFit
         imageView.image = image
-        classifyImage(for: image, localThreshold: 0.51)
+        classifyImage(for: image, localThreshold: 0.70)
     }
     
 }
@@ -151,4 +176,14 @@ extension HomeVC: BindableType {
         }
     }
 
+}
+
+extension String {
+    func capitalizingFirstLetter() -> String {
+        return prefix(1).uppercased() + self.lowercased().dropFirst()
+    }
+    
+    mutating func capitalizeFirstLetter() {
+        self = self.capitalizingFirstLetter()
+    }
 }
